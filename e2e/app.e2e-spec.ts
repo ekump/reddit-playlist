@@ -7,8 +7,8 @@ describe('reddit-playlist App', function() {
     page = new RedditPlaylistPage();
   });
 
-  it('should display message saying app works', () => {
+  it('should display message saying reddit playlist', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('app works!');
+    expect(page.getParagraphText()).toEqual('Reddit Playlist');
   });
 });
