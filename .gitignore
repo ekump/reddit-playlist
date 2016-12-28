@@ -26,5 +26,8 @@ testem.log
 /e2e/*.js
 /e2e/*.map
 
+#dotenv file
+.env
+
 #System Files
 .DS_Store
