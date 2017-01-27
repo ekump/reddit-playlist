@@ -1,28 +1,24 @@
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { APP_ROUTES } from './app.routes';
-import 'rxjs/add/operator/map';
-import { SpotifyAuthComponent } from './spotify-auth/spotify-auth.component';
-import { SpotifyService } from './spotify.service';
+import { HomeComponent } from '../home/home.component';
+
+import { routing } from './app.routing';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SpotifyAuthComponent
-  ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpModule,
-    RouterModule.forRoot(APP_ROUTES)
+    routing,
+    HttpModule
   ],
-  providers: [
-    { provide: SpotifyService , useClass: SpotifyService }
+  declarations: [
+    AppComponent,
+    HomeComponent
   ],
-  bootstrap: [AppComponent]
+  providers: [],
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
+
 export class AppModule { }

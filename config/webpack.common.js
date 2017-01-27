@@ -1,63 +1,115 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var helpers = require('./helpers');
+'use strict'
 
-const Dotenv = require('dotenv-webpack');
+const HELPERS = require('./helpers');
+const WEBPACK = require('webpack');
+const WEBCOMPONENTS = require('./webcomponents.manifest');
 
-module.exports = {
-  entry: {
-    'polyfills': './src/polyfills.ts',
-    'vendor': './src/vendor.ts',
-    'app': './src/main.ts'
-  },
+const ASSETS_PLUGIN = require('assets-webpack-plugin');
+const FORK_CHECKER_PLUGIN = require('awesome-typescript-loader').ForkCheckerPlugin;
+const HTML_WEBPACK_PLUGIN = require('html-webpack-plugin');
+const TS_LINT_CONF = require('./tslint.json');
 
-  resolve: {
-    extensions: ['', '.ts', '.js'],
-    moduleDirectories: ['node_modules'],
-    root: helpers.root('src')
-  },
+const METADATA = {
+  title: 'Reddit Playlist',
+  baseUrl: '/',
+  webComponents: WEBCOMPONENTS.join('-')
+};
 
+let webpackCommon = {
   module: {
-    loaders: [
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'source-map-loader'
+      },
       {
         test: /\.ts$/,
-        loaders: ['awesome-typescript-loader', 'angular2-template-loader']
+        loader: 'tslint-loader'
+      }
+    ],
+    loaders: [
+      {
+        test: /\.ts/,
+        loaders: ['awesome-typescript-loader']
       },
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: 'raw-loader',
+        exclude: [HELPERS.root('src/index.html')]
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file?name=assets/[name].[hash].[ext]'
+        test: /\.(jpe?g|png|eot|woff|ttf)$/,
+        loader: 'file-loader'
       },
       {
-        test: /\.css$/,
-        exclude: helpers.root('src', 'app'),
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
+        test: /global\.scss$/,
+        loaders: ['to-string-loader', 'style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.css$/,
-        include: helpers.root('src', 'app'),
-        loader: 'raw'
+        test: /\.scss$/,
+        exclude: [/global\.scss$/],
+        loaders: ['raw-loader', 'sass-loader']
       }
     ]
   },
-
+  entry: {
+    '1_polyfills': './polyfills.ts',
+    '2_vendor': './vendor',
+    '3_global_styles': './src/styles/global.scss',
+    '4_app': './src/app/main'
+  },
+  output: {
+    path: HELPERS.root('dist'),
+    filename: '[name]_[chunkhash].bundle.js',
+    sourceMapFilename: '[name]_[chunkhash].map'
+  },
+  tslint: {
+    emitErrors: false,
+    failOnHint: false,
+    resourcePath: 'src',
+    configuration: TS_LINT_CONF
+  },
+  resolve: {
+    extensions: ['', '.js', '.ts'],
+    modulesDirectories: ['node_modules'],
+    root: HELPERS.root('src')
+  },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
+    new ASSETS_PLUGIN({
+      path: HELPERS.root('dist'),
+      filename: 'webpack-assets.json',
+      prettyPrint: true
     }),
 
-    new HtmlWebpackPlugin({
-      template: 'src/index.html'
+    new FORK_CHECKER_PLUGIN(),
+
+    new WEBPACK.optimize.CommonsChunkPlugin({
+      name: ['1_polyfills']
     }),
 
-    new Dotenv({
-      path: './.env',
-      safe: false
+    new WEBPACK.optimize.OccurenceOrderPlugin(true),
+
+    new HTML_WEBPACK_PLUGIN({
+      template: HELPERS.root('src') + '/index.html',
+      chunksSortMode: function (a, b) {
+         if (a.names[0] > b.names[0]) {
+           return 1;
+         }
+         if (a.names[0] < b.names[0]) {
+           return -1;
+         }
+         return 0;
+       }
+    }),
+
+    new WEBPACK.ProvidePlugin({
+      Reflect: 'core-js/es7/reflect'
     })
+  ],
+  postcss: [
+    require('autoprefixer')
   ]
-};
+}
 
+module.exports.webpackCommon = webpackCommon;
+module.exports.METADATA = METADATA;

@@ -1,43 +1,37 @@
-// Karma configuration file, see link for more information
-// https://karma-runner.github.io/0.13/config/configuration-file.html
+'use strict'
 
-module.exports = function (config) {
-  config.set({
+const TEST_WEBPACK_CONFIG = require('./webpack.test');
+
+module.exports = function(config) {
+  let configuration = {
     basePath: '',
-    frameworks: ['jasmine', 'angular-cli'],
-    plugins: [
-      require('karma-jasmine'),
-      require('karma-chrome-launcher'),
-      require('karma-remap-istanbul'),
-      require('angular-cli/plugins/karma')
-    ],
+    frameworks: ['jasmine'],
+    exclude: [ ],
     files: [
-      { pattern: './src/test.ts', watched: false }
+      { pattern: './src/test/test.component.html', nocache: true },
+      { pattern: './config/spec-bundle.js', watched: false }
     ],
-    preprocessors: {
-      './src/test.ts': ['angular-cli']
+    preprocessors: { './config/spec-bundle.js': ['webpack'] },
+    webpack: TEST_WEBPACK_CONFIG,
+    coverageReporter: {
+      type: 'in-memory'
     },
-    mime: {
-      'text/x-typescript': ['ts','tsx']
+    remapCoverageReporter: {
+      'text-summary': null,
+      json: './coverage/coverage.json',
+      html: './coverage/html'
     },
-    remapIstanbulReporter: {
-      reports: {
-        html: 'coverage',
-        lcovonly: './coverage/coverage.lcov'
-      }
-    },
-    angularCli: {
-      config: './angular-cli.json',
-      environment: 'dev'
-    },
-    reporters: config.angularCli && config.angularCli.codeCoverage
-              ? ['progress', 'karma-remap-istanbul']
-              : ['progress'],
+    webpackMiddleware: { stats: 'errors-only'},
+    reporters: [ 'mocha', 'coverage' ],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false
-  });
+    autoWatch: false,
+    browsers: [
+      'Chrome'
+    ],
+    singleRun: true
+  };
+
+  config.set(configuration);
 };

@@ -2,20 +2,32 @@ function clone (o) { return JSON.parse(JSON.stringify(o)); }
 
 var defaultEnv = {
   env:  process.env.NODE_ENV || 'development',
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 4200,
+  serveStaticAssets: process.env.SERVE_STATIC_ASSETS,
+  useProductionAngular: process.env.USE_PRODUCTION_ANGULAR,
   logger: 'dev',
-  spotify: {
-    clientID: process.env.SPOTIFY_CLIENT_ID || 'no_id',
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET || 'no_secret'
+  session: {
+    secret: process.env.SESSION_SECRET || 'super-sekret'
+  },
+  passport: {
+    strategy: 'passport-spotify',
+    options: {
+      name: 'spotify',
+      clientID: process.env.SPOTIFY_API_CLIENT_ID || 'bd709c9f4b0b459f854f2b7cf110a450',
+      clientSecret: process.env.SPOTIFY_API_CLIENT_SECRET || '10becc9d9dc447ddb05b797376e745cc',
+      callbackURL: '/auth/spotify/callback'
+    }
   }
 };
 
 var envs = {
   test: clone(defaultEnv),
   development: clone(defaultEnv),
+  staging: clone(defaultEnv),
   production: clone(defaultEnv)
 };
 
 
+envs.production.logger = 'tiny';
 
 module.exports = envs[process.env.NODE_ENV] || envs.development;

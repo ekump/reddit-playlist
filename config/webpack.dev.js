@@ -1,24 +1,22 @@
-var webpackMerge = require('webpack-merge');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var commonConfig = require('./webpack.common.js');
-var helpers = require('./helpers');
+'use strict'
 
-module.exports = webpackMerge(commonConfig, {
-  devtool: 'cheap-module-eval-source-map',
+const HELPERS       = require('./helpers');
+const COMMON_CONFIG = require('./webpack.common.js');
+const WEBPACK_MERGE = require('webpack-merge');
 
-  output: {
-    path: helpers.root('dist'),
-    publicPath: 'http://localhost:4200/',
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
+module.exports = WEBPACK_MERGE(COMMON_CONFIG.webpackCommon, {
+  metadata: {
+    title: COMMON_CONFIG.METADATA.title,
+    baseUrl: COMMON_CONFIG.METADATA.baseUrl,
   },
-
-  plugins: [
-    new ExtractTextPlugin('[name].css')
-  ],
-
-  devServer: {
-    historyApiFallback: true,
-    stats: 'minimal'
+  debug: true,
+  devtool: 'cheap-module-source-map',
+  node: {
+    global: 'window',
+    crypto: 'empty',
+    process: true,
+    module: false,
+    clearImmediate: false,
+    setImmediate: false
   }
 });
