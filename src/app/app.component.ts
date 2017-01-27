@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'reddit-playlist',
+  template: require('./app.component.html'),
+  styles:   [require('./app.component.scss')]
 })
+
 export class AppComponent {
   title = 'Reddit Playlist';
 }
