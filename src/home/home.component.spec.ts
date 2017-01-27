@@ -26,7 +26,7 @@ describe('HomeComponent', () => {
 
   describe('template', () => {
     it('has the correct text', () => {
-      debugElement = fixture.debugElement.query(By.css('.reddit playlist'));
+      debugElement = fixture.debugElement.query(By.css('.redditPlaylist'));
 
       expect(debugElement.nativeElement.textContent).toContain('reddit playlist');
     });
