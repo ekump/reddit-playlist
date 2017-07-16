@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { HomeComponent } from '../home/home.component';
-import { AuthService, SpotifyService } from '../services';
+import { AuthService, RedditService, SpotifyService } from '../services';
 import { routing } from './app.routing';
 
 @NgModule({
@@ -18,6 +18,7 @@ import { routing } from './app.routing';
   ],
   providers: [
     AuthService,
+    RedditService,
     SpotifyService
   ],
   bootstrap: [AppComponent],

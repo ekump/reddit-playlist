@@ -20,6 +20,9 @@ var defaultEnv = {
   },
   spotify: {
     baseURL: 'https://api.spotify.com'
+  },
+  reddit: {
+    baseURL: 'https://www.reddit.com'
   }
 };
 

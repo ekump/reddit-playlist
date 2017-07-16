@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, SpotifyService } from '../services';
+import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyUser } from '../models';
 
 @Component({
@@ -11,8 +11,11 @@ export class HomeComponent implements OnInit  {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
+  subRedditList: Array<string>;
+  subReddit: string;
+  getSubRedditObserver: any;
 
-  constructor(private authService: AuthService, private spotifyService: SpotifyService ) {}
+  constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
 
   ngOnInit() {
     this.authObserver = this.authService.isLoggedInToSpotify().subscribe( result => {
@@ -22,6 +25,13 @@ export class HomeComponent implements OnInit  {
           this.spotifyUser = result;
         });
       }
+    });
+    this.getSubReddits();
+  }
+
+  getSubReddits(): void {
+    this.getSubRedditObserver = this.redditService.getSubReddits().subscribe( result => {
+      this.subRedditList = result;
     });
   }
 }
