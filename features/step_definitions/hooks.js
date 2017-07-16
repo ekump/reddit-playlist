@@ -19,10 +19,6 @@ module.exports = function () {
     return deferred.promise;
   });
 
-  this.BeforeFeatures(function () {
-    return browser.driver.manage().window().setSize(1280, 800);
-  });
-
   this.After({ timeout: 1000 * 5 * 60 }, function () {
     return browser.manage().logs().get('browser').then(function(logs) {
       logs.forEach(function(log) {
