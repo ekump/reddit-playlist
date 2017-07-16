@@ -16,7 +16,7 @@ describe('HomeComponent', () => {
 
   let mockedAuthService = {
     isLoggedInToSpotify() {
-      return Observable.from([validLogin]);
+      return Observable.of(validLogin);
     }
   };
   let mockedSpotifyService = {
@@ -61,11 +61,24 @@ describe('HomeComponent', () => {
 
   describe('#ngOnInit', () => {
     it('should set spotifyUser', () => {
-      component.isSpotifyAuthenticated = true;
+      validLogin = true;
       component.ngOnInit();
-      fixture.detectChanges();
 
       expect(component.spotifyUser).toBeDefined();
+    });
+
+    it('should set isSpotifyAuthenticated to true when logged in', () => {
+      validLogin = true;
+      component.ngOnInit();
+
+      expect(component.isSpotifyAuthenticated).toBe(true);
+    });
+
+    it('should set isSpotifyAuthenticated to false when logged out', () => {
+      validLogin = false;
+      component.ngOnInit();
+
+      expect(component.isSpotifyAuthenticated).toBe(false);
     });
   });
 
