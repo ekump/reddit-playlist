@@ -14,6 +14,9 @@ export class HomeComponent implements OnInit  {
   subRedditList: Array<string>;
   subReddit: string;
   getSubRedditObserver: any;
+  fetchFromRedditInProgress: boolean = false;
+  posts: Array<string>;
+  getPostsFromSubRedditObserver: any;
 
   constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
 
@@ -33,5 +36,18 @@ export class HomeComponent implements OnInit  {
     this.getSubRedditObserver = this.redditService.getSubReddits().subscribe( result => {
       this.subRedditList = result;
     });
+  }
+
+  getPostsFromSubReddit(): void {
+    console.log('attempting to fetch');
+    this.fetchFromRedditInProgress = true;
+    this.getPostsFromSubRedditObserver = this.redditService.getPostsFromSubReddit(this.subReddit).subscribe( result => {
+      this.fetchFromRedditInProgress = false;
+      this.posts = result;
+    });
+  }
+
+  onChange(newValue) {
+    this.getPostsFromSubReddit();
   }
 }

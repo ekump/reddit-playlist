@@ -5,10 +5,11 @@
 </div>
 <div>
   <label>Subreddit</label>
-  <select>
-    <option *ngFor="let subReddit of subRedditList"
-      [selected]="subReddit == selectedSubReddit">
-    {{ subReddit }}
+  <select [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
+    <option *ngFor="let sub of subRedditList"
+      [selected]="sub == subReddit">
+    {{ sub }}
     </option>
   </select>
 </div>
+<div *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>

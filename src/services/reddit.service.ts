@@ -8,6 +8,7 @@ export class RedditService {
   subReddits: any;
   observable: Observable<any> = null;
   subRedditListEndpoint: string = '/r/r/music/wiki/musicsubreddits.json';
+  songs: any;
   constructor(private http: Http) {}
 
   getSubReddits(): Observable<any> {
@@ -31,6 +32,32 @@ export class RedditService {
         });
       return this.observable;
     }
+  };
+
+  getPostsFromSubReddit(subReddit: string): Observable<any> {
+    let headers = new Headers({
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': -1
+    });
+
+    let options = new RequestOptions({ headers: headers });
+
+    this.observable = this.http.get('/r' + subReddit + '.json', options)
+      .map( resp => {
+        this.songs = this.parsePosts(resp.json());
+        return this.songs;
+      });
+    return this.observable;
+  };
+  parsePosts( redditResponse: any): Array<string> {
+    let parsedResponse: Array<string> = [];
+    for (let post of redditResponse.data.children) {
+      if ((post.data) && (post.data.title) && (post.data.media)) {
+        parsedResponse.push(post.data.title);
+      }
+    }
+    return parsedResponse;
   };
 
   parseSubReddits( redditResponse: any): Array<string> {
