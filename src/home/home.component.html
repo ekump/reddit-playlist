@@ -1,2 +1,5 @@
 <p class='redditPlaylist'>reddit playlist</p>
-<a href='/auth/spotify'>Login to Spotify</a>
+<a href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
+<div *ngIf="spotifyUser">
+  <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
+</div>

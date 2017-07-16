@@ -17,6 +17,9 @@ var defaultEnv = {
       clientSecret: process.env.SPOTIFY_API_CLIENT_SECRET,
       callbackURL: '/auth/spotify/callback'
     }
+  },
+  spotify: {
+    baseURL: 'https://api.spotify.com'
   }
 };
 
