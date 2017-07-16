@@ -16,6 +16,8 @@ app.use(session(config.session));
 app.use(require('morgan')(config.logger));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/s/', require('./require_spotify_user'), require('./spotify_proxy'));
+
 passport.deserializeUser(function(accessToken, done) { done(null, accessToken); });
 passport.serializeUser(function(accessToken, done) { done(null, accessToken) });
 
@@ -25,6 +27,15 @@ passport.use(new strategy(config.passport.options, function (accessToken, refres
 }));
 app.get('/auth/spotify', passport.authenticate('spotify'));
 app.get('/auth/spotify/callback', passport.authenticate('spotify', { failureRedirect: '/login', successRedirect: '/home' }));
+
+app.get('/auth/spotify/logged-in', function(req, res, next) {
+  if ((req.session.passport) && (req.session.passport.user) && (req.session.passport.user.accessToken)) {
+    res.send(true);
+  }
+  else {
+    res.send(false);
+  }
+});
 
 if (config.serveStaticAssets) {
   app.use('/', require('../config/express.production'));

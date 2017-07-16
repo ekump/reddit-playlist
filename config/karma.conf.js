@@ -30,7 +30,11 @@ module.exports = function(config) {
     browsers: [
       'Chrome'
     ],
-    singleRun: true
+    singleRun: true,
+    browserConsoleLogOptions: {
+      terminal: true,
+      level: ""
+    }
   };
 
   config.set(configuration);
