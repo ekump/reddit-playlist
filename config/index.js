@@ -13,8 +13,8 @@ var defaultEnv = {
     strategy: 'passport-spotify',
     options: {
       name: 'spotify',
-      clientID: process.env.SPOTIFY_API_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_API_CLIENT_SECRET,
+      clientID: process.env.SPOTIFY_API_CLIENT_ID || 'default-spotify-client-id',
+      clientSecret: process.env.SPOTIFY_API_CLIENT_SECRET || 'default-spotify-client-secret',
       callbackURL: '/auth/spotify/callback'
     }
   },
