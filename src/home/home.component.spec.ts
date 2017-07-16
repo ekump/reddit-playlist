@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { AuthService, SpotifyService } from '../services';
+import { SpotifyUser } from '../models';
 import { HomeComponent } from './home.component';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory').SpotifyUserFactory;
@@ -19,11 +20,13 @@ describe('HomeComponent', () => {
       return Observable.of(validLogin);
     }
   };
+
   let mockedSpotifyService = {
     getMe(): Observable<SpotifyUser> {
       return Observable.from([ SpotifyUserFactory.build() ]);
-    };
-  }
+    }
+  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [
