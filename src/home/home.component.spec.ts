@@ -10,12 +10,13 @@ import { HomeComponent } from './home.component';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory').SpotifyUserFactory;
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
   let validLogin: boolean = false;
   let subReddits: Array<string> =[ '/r/blackMetal', '/r/DSBM' ];
+  let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
   let mockedAuthService = {
     isLoggedInToSpotify() {
       return Observable.of(validLogin);
@@ -24,7 +25,7 @@ fdescribe('HomeComponent', () => {
 
   let mockedRedditService = {
     getPostsFromSubReddit(subReddit: string) {
-      return Observable.from([[ 'Converge - Jane Doe', 'Michael Jackson - Beat It']]);
+      return Observable.from([posts]);
     },
     getSubReddits(): Observable<Array<string>> {
       return Observable.from([subReddits]);
@@ -152,4 +153,10 @@ fdescribe('HomeComponent', () => {
     });
   });
 
+  describe('#getPostsFromSubReddit', () => {
+    it('sets list of posts', () => {
+      component.getPostsFromSubReddit();
+      expect(component.posts).toEqual(posts);
+    });
+  });
 });
