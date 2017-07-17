@@ -33,4 +33,32 @@ describe('RedditService', () => {
       });
     });
   });
+
+  describe('#getPostsFromSubReddit', () => {
+    beforeEach(() => {
+      http = new Http(backend, requestOptions);
+    });
+
+    it('returns an observable with an array of posts ', done => {
+      let resp  = {
+        json() {
+          let data = {};
+          data['data'] = {};
+          data['data']['children'] = {};
+          data['data']['children']['data'] = {};
+          data['data']['children']['data']['title'] = 'Test Title';
+          data['data']['children']['data']['media'] = 'Test Media';
+          return data;
+        }
+      };
+      let observable = Observable.from([resp]);
+      spyOn(http, 'get').and.returnValue(observable);
+      redditService = new RedditService(http);
+      let getPostsFromSubRedditObservable = redditService.getPostsFromSubReddit('/r/blackMetal');
+      getPostsFromSubRedditObservable.subscribe((response) => {
+        expect(response).toEqual(redditService.songs);
+        done();
+      });
+    });
+  });
 });
