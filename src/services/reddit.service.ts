@@ -32,7 +32,7 @@ export class RedditService {
         });
       return this.observable;
     }
-  };
+};
 
   getPostsFromSubReddit(subReddit: string): Observable<any> {
     let headers = new Headers({
@@ -50,6 +50,7 @@ export class RedditService {
       });
     return this.observable;
   };
+
   parsePosts( redditResponse: any): Array<string> {
     let parsedResponse: Array<string> = [];
     for (let post of redditResponse.data.children) {

@@ -1,7 +1,7 @@
 <p class='redditPlaylist'>reddit playlist</p>
 <a href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
 <div *ngIf="spotifyUser">
-  <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}
+  <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
 </div>
 <div>
   <label>Subreddit</label>
@@ -12,4 +12,12 @@
     </option>
   </select>
 </div>
-<div *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
+<div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
+<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>-->
+
+<div *ngIf='posts'>
+  <span>Posts</span>
+  <ul>
+    <li *ngFor="let post of posts">{{post}}</li>
+  </ul>
+</div>

@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit  {
   subReddit: string;
   getSubRedditObserver: any;
   fetchFromRedditInProgress: boolean = false;
+  searchSpotifyInProgress: boolean = false;
   posts: Array<string>;
   getPostsFromSubRedditObserver: any;
 
@@ -39,12 +40,15 @@ export class HomeComponent implements OnInit  {
   }
 
   getPostsFromSubReddit(): void {
-    console.log('attempting to fetch');
     this.fetchFromRedditInProgress = true;
     this.getPostsFromSubRedditObserver = this.redditService.getPostsFromSubReddit(this.subReddit).subscribe( result => {
       this.fetchFromRedditInProgress = false;
       this.posts = result;
+      this.searchSpotifyForSongs();
     });
+  }
+  searchSpotifyForSongs(): void {
+   this.searchSpotifyInProgress = true;
   }
 
   onChange(newValue) {
