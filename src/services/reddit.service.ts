@@ -78,5 +78,5 @@ export class RedditService {
       }
     }
     return parsedResponse;
-  }
+  };
 }

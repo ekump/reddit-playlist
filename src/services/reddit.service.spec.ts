@@ -73,4 +73,17 @@ describe('RedditService', () => {
       expect(actualResult[1]).toEqual('Portishead - Roads');
     });
   });
+
+  describe('parseSubReddits', () => {
+    let data = { 'data': { 'content_md': '##Rock/Metal\n* /r/metal\n* /r/DSBM\n##Electronic\n* /r/triphop\nJust a genric message with a /r/flirpFlop in it' }};
+
+    it('correctly parses subreddits (temporarily) limited to rock/metal', () => {
+      let actualResult = redditService.parseSubReddits(data);
+
+      expect(actualResult).toBeDefined();
+      expect(actualResult.length).toBe(2);
+      expect(actualResult[0]).toEqual('/r/metal');
+      expect(actualResult[1]).toEqual('/r/DSBM');
+    });
+  });
 });
