@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, SpotifyService } from '../services';
+import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyUser } from '../models';
 
 @Component({
@@ -11,8 +11,15 @@ export class HomeComponent implements OnInit  {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
+  subRedditList: Array<string>;
+  subReddit: string;
+  getSubRedditObserver: any;
+  fetchFromRedditInProgress: boolean = false;
+  searchSpotifyInProgress: boolean = false;
+  posts: Array<string>;
+  getPostsFromSubRedditObserver: any;
 
-  constructor(private authService: AuthService, private spotifyService: SpotifyService ) {}
+  constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
 
   ngOnInit() {
     this.authObserver = this.authService.isLoggedInToSpotify().subscribe( result => {
@@ -23,5 +30,28 @@ export class HomeComponent implements OnInit  {
         });
       }
     });
+    this.getSubReddits();
+  }
+
+  getSubReddits(): void {
+    this.getSubRedditObserver = this.redditService.getSubReddits().subscribe( result => {
+      this.subRedditList = result;
+    });
+  }
+
+  getPostsFromSubReddit(): void {
+    this.fetchFromRedditInProgress = true;
+    this.getPostsFromSubRedditObserver = this.redditService.getPostsFromSubReddit(this.subReddit).subscribe( result => {
+      this.fetchFromRedditInProgress = false;
+      this.posts = result;
+      this.searchSpotifyForSongs();
+    });
+  }
+  searchSpotifyForSongs(): void {
+   this.searchSpotifyInProgress = true;
+  }
+
+  onChange(newValue) {
+    this.getPostsFromSubReddit();
   }
 }

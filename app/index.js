@@ -17,6 +17,7 @@ app.use(require('morgan')(config.logger));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/s/', require('./require_spotify_user'), require('./spotify_proxy'));
+app.use('/r/', require('./reddit_proxy'));
 
 passport.deserializeUser(function(accessToken, done) { done(null, accessToken); });
 passport.serializeUser(function(accessToken, done) { done(null, accessToken) });

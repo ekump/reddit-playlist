@@ -3,3 +3,21 @@
 <div *ngIf="spotifyUser">
   <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
 </div>
+<div>
+  <label>Subreddit</label>
+  <select [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
+    <option *ngFor="let sub of subRedditList"
+      [selected]="sub == subReddit">
+    {{ sub }}
+    </option>
+  </select>
+</div>
+<div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
+<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>-->
+
+<div *ngIf='posts'>
+  <span>Posts</span>
+  <ul>
+    <li *ngFor="let post of posts">{{post}}</li>
+  </ul>
+</div>
