@@ -9,7 +9,7 @@ let requestOptions = new RequestOptions({});
 let http: Http;
 
 describe('RedditService', () => {
-  describe('#getSubReddits', () => {
+  describe('getSubReddits', () => {
     beforeEach(() => {
       http = new Http(backend, requestOptions);
     });
@@ -34,7 +34,7 @@ describe('RedditService', () => {
     });
   });
 
-  describe('#getPostsFromSubReddit', () => {
+  describe('getPostsFromSubReddit', () => {
     beforeEach(() => {
       http = new Http(backend, requestOptions);
     });
@@ -42,12 +42,7 @@ describe('RedditService', () => {
     it('returns an observable with an array of posts ', done => {
       let resp  = {
         json() {
-          let data = {};
-          data['data'] = {};
-          data['data']['children'] = {};
-          data['data']['children']['data'] = {};
-          data['data']['children']['data']['title'] = 'Test Title';
-          data['data']['children']['data']['media'] = 'Test Media';
+          let data = { 'data': { 'children': [{ 'data': { 'title': 'Test Title', 'media': 'Test Media' }}]}};
           return data;
         }
       };
@@ -59,6 +54,23 @@ describe('RedditService', () => {
         expect(response).toEqual(redditService.songs);
         done();
       });
+    });
+  });
+
+  describe('parsePosts', () => {
+    it('correctly parses subReddit for post title when media is present', () => {
+      let data = { 'data': { 'children': [
+        { 'data': { 'title': 'Trap Them - Slumcult & Gather', 'media': 'Test Media' }},
+        { 'data': { 'title': 'Portishead - Roads', 'media': 'Also Test Media' }},
+        { 'data': { 'title': 'Gorgoroth - Prayer' }}
+        ]}};
+
+      let actualResult = redditService.parsePosts(data);
+
+      expect(actualResult).toBeDefined();
+      expect(actualResult.length).toBe(2);
+      expect(actualResult[0]).toEqual('Trap Them - Slumcult & Gather');
+      expect(actualResult[1]).toEqual('Portishead - Roads');
     });
   });
 });
