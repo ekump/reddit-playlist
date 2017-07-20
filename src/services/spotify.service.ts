@@ -3,20 +3,22 @@ import { Headers, Http, RequestOptions, ResponseContentType } from '@angular/htt
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 
-import { SpotifyUser } from '../models';
+import { SpotifyTrack, SpotifyUser } from '../models';
 
 @Injectable()
 export class SpotifyService {
   spotifyUser: SpotifyUser;
-  observable: Observable<SpotifyUser> = null;
+  meObservable: Observable<SpotifyUser> = null;
+  searchObservable: Observable<Array<SpotifyTrack>> = null;
   meEndpoint: string = '/s/v1/me';
+  searchEndpoint: string = '/s/v1/search';
   constructor(private http: Http) {}
 
   getMe(): Observable<SpotifyUser> {
     if (this.spotifyUser) {
       return Observable.from([this.spotifyUser]);
-    } else if (this.observable) {
-      return this.observable;
+    } else if (this.meObservable) {
+      return this.meObservable;
     } else {
       let headers = new Headers({
         'Cache-Control': 'no-cache',
@@ -26,12 +28,32 @@ export class SpotifyService {
 
       let options = new RequestOptions({ headers: headers });
 
-      this.observable = this.http.get(this.meEndpoint, options)
+      this.meObservable = this.http.get(this.meEndpoint, options)
         .map( resp => {
           this.spotifyUser = resp.json();
           return this.spotifyUser;
         });
-      return this.observable;
+      return this.meObservable;
     }
+  };
+
+  search(redditPost: string): Observable<Array<SpotifyTrack>> {
+    let headers = new Headers({
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache',
+      'Expires': -1
+    });
+    let spotifyTracks: Array<SpotifyTrack> = [];
+    let searchStrings = redditPost.split('-');
+    let options = new RequestOptions({ headers: headers });
+    let url = this.searchEndpoint + '?q=' + searchStrings[0] + searchStrings[1] + '&type=track';
+    this.searchObservable = this.http.get(url, options)
+      .map( resp => {
+        resp.json().tracks.items.forEach( function(item) {
+          spotifyTracks.push(new SpotifyTrack(item));
+        });
+        return spotifyTracks;
+      });
+    return this.searchObservable;
   };
 }

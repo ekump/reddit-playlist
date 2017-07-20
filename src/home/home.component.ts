@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit  {
   searchSpotifyInProgress: boolean = false;
   posts: Array<string>;
   getPostsFromSubRedditObserver: any;
+  searchSpotifyForSongsObserver: any;
 
   constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
 
@@ -49,6 +50,10 @@ export class HomeComponent implements OnInit  {
   }
   searchSpotifyForSongs(): void {
    this.searchSpotifyInProgress = true;
+   let searchString = 'Look The Part, Be The Part, Motherfucker - True North';
+   this.searchSpotifyForSongsObserver = this.spotifyService.search(searchString).subscribe( result => {
+    this.searchSpotifyInProgress = false;
+   });
   }
 
   onChange(newValue) {
