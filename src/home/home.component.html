@@ -13,11 +13,18 @@
   </select>
 </div>
 <div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
-<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>-->
+<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>
 
 <div *ngIf='posts'>
   <span>Posts</span>
   <ul>
     <li *ngFor="let post of posts">{{post}}</li>
+  </ul>
+</div>
+<br>
+<div *ngIf='songs'>
+  <span>Songs</span>
+  <ul>
+    <li *ngFor="let song of songs">{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</li>
   </ul>
 </div>

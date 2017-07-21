@@ -45,8 +45,11 @@ export class SpotifyService {
     });
     let spotifyTracks: Array<SpotifyTrack> = [];
     let searchStrings = redditPost.split('-');
+    if (searchStrings.length < 2) {
+      return Observable.from([[]]);
+    }
     let options = new RequestOptions({ headers: headers });
-    let url = this.searchEndpoint + '?q=' + searchStrings[0] + searchStrings[1] + '&type=track';
+    let url = this.searchEndpoint + '?q=' + searchStrings[0] + this.sanitizeSongTitle(searchStrings[1]) + '&type=track';
     this.searchObservable = this.http.get(url, options)
       .map( resp => {
         resp.json().tracks.items.forEach( function(item) {
@@ -56,4 +59,11 @@ export class SpotifyService {
       });
     return this.searchObservable;
   };
+
+  sanitizeSongTitle(songTitle: string): string {
+    let sanitizedString: string = songTitle
+      .replace(/\[.*?\]/g, '')
+      .replace(/\(.*?\)/g, '');
+    return sanitizedString;
+  }
 }
