@@ -5,6 +5,7 @@ import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/merge';
 import { SpotifyTrack } from '../models';
 import { SpotifyService } from '../services/spotify.service.ts';
+//import { SpotifyService } from '../../src/services/spotify.service';
 const Rx = require('rxjs');
 @Injectable()
 export class SearchService {
