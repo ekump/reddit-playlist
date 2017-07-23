@@ -4,8 +4,8 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/merge';
 import { SpotifyTrack } from '../models';
-import { SpotifyService } from '../services/spotify.service.ts';
-//import { SpotifyService } from '../../src/services/spotify.service';
+import { SpotifyService } from '../services/spotify.service';
+
 const Rx = require('rxjs');
 @Injectable()
 export class SearchService {
@@ -23,7 +23,7 @@ export class SearchService {
     this.searchObservables.push(searchObservable);
     }.bind(this));
     return Rx.Observable.merge(...this.searchObservables);
-    }
+  }
 
   matchSearchResults(post: string, spotifyTracks: Array<SpotifyTrack>): Array<SpotifyTrack> {
     let splitPost = post.split('-');
@@ -35,8 +35,6 @@ export class SearchService {
         }).length > 0) {
           matchedSpotifyTracks.push(spotifyTrack);
         }
-      } else {
-        console.log('could not match post: ', post, ' and spotifyTrack: ', spotifyTrack);
       }
     });
     return matchedSpotifyTracks;

@@ -148,24 +148,17 @@ describe('HomeComponent', () => {
     });
   });
 
-  fdescribe('#searchSpotifyForSongs', () => {
-    it('sets searchSpotifyInProgress to true', () => {
-      component.searchSpotifyInProgress = false;
-      component.searchSpotifyForSongs();
-
-      expect(component.searchSpotifyInProgress).toBe(true);
-    });
-
+  describe('#searchSpotifyForSongs', () => {
     it('calls the search service and sets songs', () => {
       let returnArray: Array<SpotifyTrack> = [new SpotifyTrack(SpotifyTrackFactory.build())];
       let posts: Array<string> = ['post 1', 'post 2'];
-      //spyOn(injectedSearchService, 'searchForSongs').and.callThrough();
 
-      //spyOn(injectedSearchService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));
+      spyOn(injectedSearchService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));
       component.posts = posts;
       component.searchSpotifyForSongs();
 
-      //expect(injectedSearchService.searchForSongs).toHaveBeenCalled();
+      expect(injectedSearchService.searchForSongs).toHaveBeenCalled();
+      expect(component.songs).toEqual(returnArray);
     });
   });
 

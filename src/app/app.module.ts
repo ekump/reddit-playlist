@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from '../home/home.component';
-import { AuthService, RedditService, SearchService, SpotifyService } from '../services';
+import { AuthService, RedditService, SpotifyService, SearchService } from '../services';
 import { routing } from './app.routing';
 
 @NgModule({

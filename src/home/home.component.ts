@@ -49,9 +49,8 @@ export class HomeComponent implements OnInit  {
     });
   }
   searchSpotifyForSongs(): void {
-   this.searchSpotifyInProgress = true;
-   this.searchSpotifyForSongsObserver = this.searchService.searchForSongs(this.posts).subscribe( result => {
-    //this.searchSpotifyInProgress = false;
+    this.songs = [];
+    this.searchSpotifyForSongsObserver = this.searchService.searchForSongs(this.posts).subscribe( result => {
     this.songs = this.songs.concat(result);
    });
   }
