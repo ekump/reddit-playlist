@@ -20,7 +20,8 @@ let webpackCommon = {
     preLoaders: [
       {
         test: /\.js$/,
-        loader: 'source-map-loader'
+        loader: 'source-map-loader',
+        exclude: [ HELPERS.root('node_modules/rxjs') ],
       },
       {
         test: /\.ts$/,

@@ -25,6 +25,6 @@
 <div *ngIf='songs'>
   <span>Songs</span>
   <ul>
-    <li *ngFor="let song of songs">{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</li>
+    <li *ngFor="let song of songs"><a href={{song.external_urls.spotify}}>{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</a></li>
   </ul>
 </div>

@@ -21,8 +21,8 @@ import { routing } from './app.routing';
   providers: [
     AuthService,
     RedditService,
-    SpotifyService,
-    SearchService
+    SearchService,
+    SpotifyService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

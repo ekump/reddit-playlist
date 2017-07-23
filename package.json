@@ -6,7 +6,7 @@
   "author": "Edmund Kump",
   "license": "ISC",
   "engines": {
-    "node": "6.3.1"
+    "node": "6.11.1"
   },
   "scripts": {
     "build:dev": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/webpack --config ./config/webpack.dev.js --progress --profile --colors",
