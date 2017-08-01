@@ -4,9 +4,10 @@ import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/merge';
 import { SpotifyTrack } from '../models';
-import { SpotifyService } from '../services/spotify.service';
+import { SpotifyService } from '../services/spotify.service.ts';
 
 const Rx = require('rxjs');
+
 @Injectable()
 export class SearchService {
   searchObservables: any = [];
