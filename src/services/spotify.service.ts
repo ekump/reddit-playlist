@@ -35,7 +35,7 @@ export class SpotifyService {
         });
       return this.meObservable;
     }
-  };
+  }
 
   search(redditPost: string): Observable<Array<SpotifyTrack>> {
     let headers = new Headers({
@@ -58,7 +58,7 @@ export class SpotifyService {
         return spotifyTracks;
       });
     return this.searchObservable;
-  };
+  }
 
   sanitizeSongTitle(songTitle: string): string {
     let sanitizedString: string = songTitle

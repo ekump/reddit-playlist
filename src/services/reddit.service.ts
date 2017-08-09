@@ -32,7 +32,7 @@ export class RedditService {
         });
       return this.observable;
     }
-  };
+  }
 
   getPostsFromSubReddit(subReddit: string): Observable<any> {
     let headers = new Headers({
