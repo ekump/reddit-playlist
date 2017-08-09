@@ -1,4 +1,4 @@
-import { Http, RequestOptions, URLSearchParams, Headers } from '@angular/http';
+import { Http, RequestOptions, Headers } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 
@@ -8,8 +8,6 @@ let service: AuthService;
 let backend = new MockBackend();
 let requestOptions = new RequestOptions({});
 let http: Http;
-
-const CONFIG = require('../../config');
 
 describe('AuthService', () => {
   describe('isLoggedInToSpotify', () => {
@@ -29,7 +27,7 @@ describe('AuthService', () => {
 
       let authObservable = service.isLoggedInToSpotify();
 
-      authObservable.subscribe((hasToken) => {
+      authObservable.subscribe( () => {
         let headers = new Headers({
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',
@@ -55,7 +53,7 @@ describe('AuthService', () => {
 
       let authObservable = service.isLoggedInToSpotify();
 
-      authObservable.subscribe((hasToken) => {
+      authObservable.subscribe( () => {
         let headers = new Headers({
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',

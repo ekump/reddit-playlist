@@ -1,14 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "outDir": "./dist",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true
   },
+  "include": [
+    "src/**/*.ts",
+    "typings/custom/**/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "typings/main",

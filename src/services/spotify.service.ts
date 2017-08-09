@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, ResponseContentType } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 
@@ -8,7 +8,7 @@ import { SpotifyUser } from '../models';
 @Injectable()
 export class SpotifyService {
   spotifyUser: SpotifyUser;
-  observable: Observable<SpotifyUser> = null;
+  observable: Observable<SpotifyUser>;
   meEndpoint: string = '/s/v1/me';
   constructor(private http: Http) {}
 
@@ -33,5 +33,5 @@ export class SpotifyService {
         });
       return this.observable;
     }
-  };
+  }
 }
