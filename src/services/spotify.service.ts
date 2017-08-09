@@ -64,6 +64,6 @@ export class SpotifyService {
     let sanitizedString: string = songTitle
       .replace(/\[.*?\]/g, '')
       .replace(/\(.*?\)/g, '');
-    return sanitizedString;
+    return sanitizedString.trim();
   }
 }

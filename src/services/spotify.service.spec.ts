@@ -14,6 +14,7 @@ describe('SpotifyService', () => {
   describe('#getMe', () => {
     beforeEach(() => {
       http = new Http(backend, requestOptions);
+      spotifyService = new SpotifyService(http);
     });
 
     it('returns an observable with the spotify user', done => {
@@ -24,12 +25,32 @@ describe('SpotifyService', () => {
       };
       let observable = Observable.from([resp]);
       spyOn(http, 'get').and.returnValue(observable);
-      spotifyService = new SpotifyService(http);
       let getMeObservable = spotifyService.getMe();
       getMeObservable.subscribe((spotifyUser) => {
         expect(spotifyUser).toEqual(spotifyService.spotifyUser);
         done();
       });
+    });
+  });
+
+  describe('#sanitizeSongTitle', () => {
+
+    it('should strip out parenthesis', () => {
+      spotifyService = new SpotifyService(http);
+      let actualResult = spotifyService.sanitizeSongTitle('My Bloody Valentine - To Here Knows When (1991)');
+      expect(actualResult).toBe('My Bloody Valentine - To Here Knows When');
+    });
+
+    it('should strip out brackets', () => {
+      spotifyService = new SpotifyService(http);
+      let actualResult = spotifyService.sanitizeSongTitle('My Bloody Valentine - To Here Knows When [shoegaze]');
+      expect(actualResult).toBe('My Bloody Valentine - To Here Knows When');
+    });
+
+    it('should strip out both parenthesis and brackets', () => {
+      spotifyService = new SpotifyService(http);
+      let actualResult = spotifyService.sanitizeSongTitle('My Bloody Valentine - To Here Knows When (1991) [shoegaze]');
+      expect(actualResult).toBe('My Bloody Valentine - To Here Knows When');
     });
   });
 });
