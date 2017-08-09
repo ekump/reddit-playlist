@@ -23,7 +23,6 @@ passport.deserializeUser(function(accessToken, done) { done(null, accessToken); 
 passport.serializeUser(function(accessToken, done) { done(null, accessToken) });
 
 passport.use(new strategy(config.passport.options, function (accessToken, refreshToken, profile, next) {
-  console.log("profile: ", profile);
   next(null, { accessToken: accessToken, refreshToken: refreshToken })
 }));
 app.get('/auth/spotify', passport.authenticate('spotify'));
