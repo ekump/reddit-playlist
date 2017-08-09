@@ -5,7 +5,6 @@ const WEBPACK = require('webpack');
 const WEBCOMPONENTS = require('./webcomponents.manifest');
 
 const ASSETS_PLUGIN = require('assets-webpack-plugin');
-const FORK_CHECKER_PLUGIN = require('awesome-typescript-loader').ForkCheckerPlugin;
 const HTML_WEBPACK_PLUGIN = require('html-webpack-plugin');
 const TS_LINT_CONF = require('./tslint.json');
 
@@ -80,8 +79,6 @@ let webpackCommon = {
       filename: 'webpack-assets.json',
       prettyPrint: true
     }),
-
-    new FORK_CHECKER_PLUGIN(),
 
     new WEBPACK.optimize.CommonsChunkPlugin({
       name: ['1_polyfills']

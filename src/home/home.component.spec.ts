@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyUser } from '../models';
 import { HomeComponent } from './home.component';
@@ -24,7 +24,7 @@ describe('HomeComponent', () => {
   };
 
   let mockedRedditService = {
-    getPostsFromSubReddit(subReddit: string) {
+    getPostsFromSubReddit() {
       return Observable.from([posts]);
     },
     getSubReddits(): Observable<Array<string>> {

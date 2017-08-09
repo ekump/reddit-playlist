@@ -1,8 +1,7 @@
-import { Http, RequestOptions, Headers, ResponseContentType } from '@angular/http';
+import { Http, RequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { SpotifyService } from '../services';
-import { SpotifyUser } from '../models';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory').SpotifyUserFactory;
 
