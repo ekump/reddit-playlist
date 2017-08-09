@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit  {
    });
   }
 
-  onChange(newValue) {
+  onChange() {
     this.getPostsFromSubReddit();
   }
 }

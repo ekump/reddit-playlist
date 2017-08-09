@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, ResponseContentType } from '@angular/http';
+import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class RedditService {
   subReddits: any;
-  observable: Observable<any> = null;
+  observable: Observable<any>;
   subRedditListEndpoint: string = '/r/r/music/wiki/musicsubreddits.json';
   songs: any;
   constructor(private http: Http) {}
@@ -49,7 +49,7 @@ export class RedditService {
         return this.songs;
       });
     return this.observable;
-  };
+  }
 
   parsePosts( redditResponse: any): Array<string> {
     let parsedResponse: Array<string> = [];
@@ -59,11 +59,11 @@ export class RedditService {
       }
     }
     return parsedResponse;
-  };
+  }
 
   parseSubReddits( redditResponse: any): Array<string> {
     let parsedResponse: Array<string> = [];
-    let currentGenre: string;
+    let currentGenre: string = '';
     for (let line of redditResponse.data.content_md.split('\n')) {
       let genreIndex = line.indexOf('##');
       if ( genreIndex === 0 ) {
@@ -78,5 +78,5 @@ export class RedditService {
       }
     }
     return parsedResponse;
-  };
+  }
 }
