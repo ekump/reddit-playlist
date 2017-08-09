@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-const CONFIG = require('../../config');
-
 @Injectable()
 export class AuthService {
   hasToken: boolean = false;
@@ -25,7 +23,7 @@ export class AuthService {
         observer.next(this.hasToken);
         observer.complete();
       },
-      (err) => {
+      () => {
         observer.next(false);
         observer.complete();
       });

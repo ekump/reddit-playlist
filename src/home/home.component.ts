@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit  {
    this.searchSpotifyInProgress = true;
   }
 
-  onChange(newValue) {
+  onChange() {
     this.getPostsFromSubReddit();
   }
 }

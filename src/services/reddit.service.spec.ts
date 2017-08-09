@@ -1,4 +1,4 @@
-import { Http, RequestOptions, Headers, ResponseContentType } from '@angular/http';
+import { Http, RequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { RedditService } from '../services';
