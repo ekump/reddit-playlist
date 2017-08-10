@@ -50,8 +50,8 @@ export class HomeComponent implements OnInit  {
   }
   searchSpotifyForSongs(): void {
     this.songs = [];
-    this.searchSpotifyForSongsObserver = this.searchService.searchForSongs(this.posts).subscribe( result => {
-    this.songs = this.songs.concat(result);
+    this.searchSpotifyForSongsObserver = this.searchService.searchForSongs(this.posts).subscribe( results => {
+      this.songs = this.songs.concat(results);
    });
   }
 

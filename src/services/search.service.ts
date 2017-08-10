@@ -11,7 +11,7 @@ const Rx = require('rxjs');
 @Injectable()
 export class SearchService {
   searchObservables: any = [];
-
+  songs: any = [];
   constructor(private spotifyService: SpotifyService) {}
 
   searchForSongs(posts: Array<string>): Observable<Array<SpotifyTrack>> {
