@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, RedditService, SpotifyService } from '../services';
-import { SpotifyUser } from '../models';
+import { AuthService, RedditService, SearchService, SpotifyService } from '../services';
+import { SpotifyTrack, SpotifyUser } from '../models';
 
 @Component({
   template: require('./home.component.html')
@@ -18,8 +18,9 @@ export class HomeComponent implements OnInit  {
   searchSpotifyInProgress: boolean = false;
   posts: Array<string>;
   getPostsFromSubRedditObserver: any;
-
-  constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
+  searchSpotifyForSongsObserver: any;
+  songs: Array<SpotifyTrack> = [];
+  constructor(private authService: AuthService, private redditService: RedditService, private searchService: SearchService, private spotifyService: SpotifyService ) {}
 
   ngOnInit() {
     this.authObserver = this.authService.isLoggedInToSpotify().subscribe( result => {
@@ -48,7 +49,10 @@ export class HomeComponent implements OnInit  {
     });
   }
   searchSpotifyForSongs(): void {
-   this.searchSpotifyInProgress = true;
+    this.songs = [];
+    this.searchSpotifyForSongsObserver = this.searchService.searchForSongs(this.posts).subscribe( results => {
+      this.songs = this.songs.concat(results);
+   });
   }
 
   onChange() {
