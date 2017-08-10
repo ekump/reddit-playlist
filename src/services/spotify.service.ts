@@ -46,7 +46,7 @@ export class SpotifyService {
     let spotifyTracks: Array<SpotifyTrack> = [];
     let searchStrings = redditPost.split('-');
     if (searchStrings.length < 2) {
-      return Observable.from([[]]);
+      return Observable.of([]);
     }
     let options = new RequestOptions({ headers: headers });
     let url = this.searchEndpoint + '?q=' + searchStrings[0] + this.sanitizeSongTitle(searchStrings[1]) + '&type=track';
