@@ -10,5 +10,5 @@ export interface SpotifyUser {
   images: any;
   product: string;
   type: string;
-  uri: string
+  uri: string;
 }
