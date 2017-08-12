@@ -8,6 +8,7 @@ module.exports = {
     title: COMMON_CONFIG.METADATA.title,
     webComponentsUrl: `${WEB_COMPONENTS_BASE_URL}${COMMON_CONFIG.METADATA.webComponents}.html`
   },
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['', '.ts', '.js'],
     root: HELPERS.root('src'),
@@ -34,6 +35,16 @@ module.exports = {
       },
       { test: /\.(eot|woff|ttf)$/,
         loader: 'file-loader'
+      }
+    ],
+    postLoaders: [
+      {
+        test: /\.ts$/,
+        loader: 'istanbul-instrumenter-loader',
+        exclude: [
+          'node_modules',
+          /\.spec\.ts$/
+        ]
       }
     ]
   }
