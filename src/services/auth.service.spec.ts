@@ -27,7 +27,7 @@ describe('AuthService', () => {
 
       let authObservable = service.isLoggedInToSpotify();
 
-      authObservable.subscribe( () => {
+      authObservable.subscribe( (resp) => {
         let headers = new Headers({
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',
@@ -36,7 +36,7 @@ describe('AuthService', () => {
         let options = new RequestOptions({ headers: headers });
 
         expect(http.get).toHaveBeenCalledWith('/auth/spotify/logged-in', options);
-        expect(service.hasToken).toBe(true);
+        expect(resp).toBe(true);
         done();
       });
     });
@@ -53,7 +53,7 @@ describe('AuthService', () => {
 
       let authObservable = service.isLoggedInToSpotify();
 
-      authObservable.subscribe( () => {
+      authObservable.subscribe( (resp) => {
         let headers = new Headers({
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',
@@ -62,7 +62,7 @@ describe('AuthService', () => {
         let options = new RequestOptions({ headers: headers });
 
         expect(http.get).toHaveBeenCalledWith('/auth/spotify/logged-in', options);
-        expect(service.hasToken).toBe(false);
+        expect(resp).toBe(false);
         done();
       });
     });

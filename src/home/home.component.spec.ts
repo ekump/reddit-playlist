@@ -147,6 +147,14 @@ describe('HomeComponent', () => {
       expect(component.getSubReddits).toHaveBeenCalled();
     });
   });
+  describe('#onChange', () => {
+    it('calls getPostsFromSubReddit', () => {
+      spyOn(component, 'getPostsFromSubReddit').and.callThrough();
+      component.onChange();
+
+      expect(component.getPostsFromSubReddit).toHaveBeenCalled();
+    });
+  });
 
   describe('#searchSpotifyForSongs', () => {
     it('calls the search service and sets songs', () => {
