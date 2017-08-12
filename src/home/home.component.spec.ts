@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { AuthService, RedditService, SearchService, SpotifyService } from '../services';
+import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
 import { HomeComponent } from './home.component';
 
@@ -18,7 +18,8 @@ describe('HomeComponent', () => {
   let validLogin: boolean = false;
   let subReddits: Array<string> =[ '/r/blackMetal', '/r/DSBM' ];
   let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
-  let injectedSearchService: any;
+  let injectedSpotifyService: any;
+
 
   let mockedAuthService = {
     isLoggedInToSpotify() {
@@ -38,10 +39,7 @@ describe('HomeComponent', () => {
   let mockedSpotifyService = {
     getMe(): Observable<SpotifyUser> {
       return Observable.from([ SpotifyUserFactory.build() ]);
-    }
-  };
-
-  let mockedSearchService = {
+    },
     searchForSongs(): Observable<Array<SpotifyTrack>> {
       return Observable.from([ SpotifyTrackFactory.build() ]);
     }
@@ -59,7 +57,6 @@ describe('HomeComponent', () => {
       providers: [
         { provide: AuthService, useValue: mockedAuthService },
         { provide: RedditService, useValue: mockedRedditService },
-        { provide: SearchService, useValue: mockedSearchService },
         { provide: SpotifyService, useValue: mockedSpotifyService }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -67,7 +64,7 @@ describe('HomeComponent', () => {
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
-    injectedSearchService = TestBed.get(SearchService);
+    injectedSpotifyService = TestBed.get(SpotifyService);
   });
 
   describe('template', () => {
@@ -161,11 +158,11 @@ describe('HomeComponent', () => {
       let returnArray: Array<SpotifyTrack> = [new SpotifyTrack(SpotifyTrackFactory.build())];
       let posts: Array<string> = ['post 1', 'post 2'];
 
-      spyOn(injectedSearchService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));
+      spyOn(injectedSpotifyService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));
       component.posts = posts;
       component.searchSpotifyForSongs();
 
-      expect(injectedSearchService.searchForSongs).toHaveBeenCalled();
+      expect(injectedSpotifyService.searchForSongs).toHaveBeenCalled();
       //expect(component.songs).toEqual(returnArray);
     });
   });

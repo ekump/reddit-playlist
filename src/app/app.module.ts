@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from '../home/home.component';
-import { AuthService, RedditService, SpotifyService, SearchService } from '../services';
+import { AuthService, RedditService, SpotifyService } from '../services';
 import { routing } from './app.routing';
 
 @NgModule({
@@ -21,8 +21,7 @@ import { routing } from './app.routing';
   providers: [
     AuthService,
     RedditService,
-    SpotifyService,
-    SearchService
+    SpotifyService
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
