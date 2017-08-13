@@ -17,9 +17,7 @@ describe('RedditService', () => {
     it('returns an observable with an array of subreddits ', done => {
       let resp  = {
         json() {
-          let data = {};
-          data['data'] = {};
-          data['data']['content_md'] = "##Rock/Metal\n* /r/blackMetal";
+          let data = { 'data': { 'content_md': "##Rock/Metal\n* /r/blackMetal" } };
           return data;
         }
       };
@@ -29,6 +27,31 @@ describe('RedditService', () => {
       let getSubRedditsObservable = redditService.getSubReddits();
       getSubRedditsObservable.subscribe((response) => {
         expect(response).toEqual(redditService.subReddits);
+        done();
+      });
+    });
+
+    it('returns observable with cached array of subreddits ', done => {
+      let data = { 'data': { 'content_md': "##Rock/Metal\n* /r/blackMetal" } };
+
+      spyOn(http, 'get').and.callThrough();
+      redditService = new RedditService(http);
+      redditService.subReddits = data;
+      let getSubRedditsObservable = redditService.getSubReddits();
+      getSubRedditsObservable.subscribe((response) => {
+        expect(response).toEqual(redditService.subReddits);
+        expect(http.get).not.toHaveBeenCalled();
+        done();
+      });
+    });
+    it('returns an observable with an existing observable if request already in progress', (done) => {
+      let data = { 'data': { 'content_md': "##Rock/Metal\n* /r/blackMetal" } };
+      spyOn(http, 'get').and.callThrough();
+      redditService = new RedditService(http);
+      redditService.observable = Observable.of(data);
+      let getSubRedditsObservable = redditService.getSubReddits();
+      getSubRedditsObservable.subscribe(() => {
+        expect(http.get).not.toHaveBeenCalled();
         done();
       });
     });
@@ -75,7 +98,7 @@ describe('RedditService', () => {
   });
 
   describe('parseSubReddits', () => {
-    let data = { 'data': { 'content_md': '##Rock/Metal\n* /r/metal\n* /r/DSBM\n##Electronic\n* /r/triphop\nJust a genric message with a /r/flirpFlop in it' }};
+    let data = { 'data': { 'content_md': '##Rock/Metal\n* /r/metal\n* /r/DSBM\n /r/*badasterick\nJust a genric message with a /r/flirpFlop in it\n##Electronic\n* /r/triphop' }};
 
     it('correctly parses subreddits (temporarily) limited to rock/metal', () => {
       let actualResult = redditService.parseSubReddits(data);
