@@ -155,7 +155,7 @@ describe('HomeComponent', () => {
 
   describe('#searchSpotifyForSongs', () => {
     it('calls the search service and sets songs', () => {
-      let returnArray: Array<SpotifyTrack> = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let returnArray: Array<SpotifyTrack> = [<SpotifyTrack> SpotifyTrackFactory.build()];
       let posts: Array<string> = ['post 1', 'post 2'];
 
       spyOn(injectedSpotifyService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));

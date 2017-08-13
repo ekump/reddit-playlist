@@ -69,7 +69,7 @@ export class SpotifyService {
     this.searchObservable = this.http.get(url, options)
       .map( resp => {
         resp.json().tracks.items.forEach( function(item) {
-          spotifyTracks.push(new SpotifyTrack(item));
+          spotifyTracks.push(item);
         });
         return spotifyTracks;
       });

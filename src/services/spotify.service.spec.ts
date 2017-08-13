@@ -58,7 +58,7 @@ describe('SpotifyService', () => {
     let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
 
     it('calls the spotify service for each post', (done) => {
-      let spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(Observable.of([new SpotifyTrack(SpotifyTrackFactory.build())]));
+      let spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(Observable.of([<SpotifyTrack> SpotifyTrackFactory.build()]));
       let searchObservable = spotifyService.searchForSongs(posts);
       searchObservable.subscribe( () => {
         expect(spotifySearchSpy.calls.count()).toBe(2);
@@ -142,7 +142,7 @@ describe('SpotifyService', () => {
 
   describe('#matchSearchResults', () => {
     it('matches a post to a spotify track that has been returned as part of the search', done => {
-      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let spotifyTracks = [<SpotifyTrack> SpotifyTrackFactory.build()];
       let post = 'Test Artist - Test Track'
       let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
 
@@ -152,7 +152,7 @@ describe('SpotifyService', () => {
     });
 
     it('matches when post has spaces or different capitalization', done => {
-      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let spotifyTracks = [<SpotifyTrack>SpotifyTrackFactory.build()];
       let post = 'Test arTist - Test TRAck   '
       let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
 
@@ -162,7 +162,7 @@ describe('SpotifyService', () => {
     });
 
     it('rejects tracks where song title matches but artist does not', done => {
-      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let spotifyTracks = [<SpotifyTrack> SpotifyTrackFactory.build()];
       let post = 'Galaxie 500 - Test Track'
       let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
 
