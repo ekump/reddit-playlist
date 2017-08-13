@@ -98,7 +98,7 @@ describe('RedditService', () => {
   });
 
   describe('parseSubReddits', () => {
-    let data = { 'data': { 'content_md': '##Rock/Metal\n* /r/metal\n* /r/DSBM\n##Electronic\n* /r/triphop\nJust a genric message with a /r/flirpFlop in it' }};
+    let data = { 'data': { 'content_md': '##Rock/Metal\n* /r/metal\n* /r/DSBM\n /r/*badasterick\nJust a genric message with a /r/flirpFlop in it\n##Electronic\n* /r/triphop' }};
 
     it('correctly parses subreddits (temporarily) limited to rock/metal', () => {
       let actualResult = redditService.parseSubReddits(data);
