@@ -43,7 +43,7 @@ describe('SpotifyService', () => {
         done();
       });
     });
-    it('returns an observable with an existing observable if request already in progress ', (done) => {
+    it('returns an observable with an existing observable if request already in progress', (done) => {
       spyOn(http, 'get').and.callThrough();
       spotifyService.meObservable = Observable.of(SpotifyUserFactory.build());
       let getMeObservable = spotifyService.getMe();
