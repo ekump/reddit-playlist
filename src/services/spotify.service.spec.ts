@@ -33,15 +33,37 @@ describe('SpotifyService', () => {
         done();
       });
     });
+    it('returns an observable with a cached spotify user', (done) => {
+      spyOn(http, 'get').and.callThrough();
+      spotifyService.spotifyUser = SpotifyUserFactory.build();
+      let getMeObservable = spotifyService.getMe();
+      getMeObservable.subscribe((spotifyUser) => {
+        expect(spotifyUser).toEqual(spotifyService.spotifyUser);
+        expect(http.get).not.toHaveBeenCalled();
+        done();
+      });
+    });
+    it('returns an observable with an existing observable if request already in progress ', (done) => {
+      spyOn(http, 'get').and.callThrough();
+      spotifyService.meObservable = Observable.of(SpotifyUserFactory.build());
+      let getMeObservable = spotifyService.getMe();
+      getMeObservable.subscribe( () => {
+        expect(http.get).not.toHaveBeenCalled();
+        done();
+      });
+    });
   });
 
   describe('#searchForSongs', () => {
     let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
-    it('calls the spotify service for each post', done => {
+
+    it('calls the spotify service for each post', (done) => {
       let spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(Observable.of([new SpotifyTrack(SpotifyTrackFactory.build())]));
-      spotifyService.searchForSongs(posts);
-      expect(spotifySearchSpy.calls.count()).toBe(2);
-      done();
+      let searchObservable = spotifyService.searchForSongs(posts);
+      searchObservable.subscribe( () => {
+        expect(spotifySearchSpy.calls.count()).toBe(2);
+        done();
+      });
     });
   });
 

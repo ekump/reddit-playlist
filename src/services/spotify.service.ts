@@ -45,6 +45,7 @@ export class SpotifyService {
     posts.forEach(function(post) {
       let searchObservable = this.search(post)
       .map( (resp) => {
+        console.log("*************WE IN HERE?*******************");
         let results: Array<SpotifyTrack> = resp;
         return this.matchSearchResults(post, results);
       });
