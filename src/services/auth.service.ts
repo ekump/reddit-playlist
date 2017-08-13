@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class AuthService {
-  hasToken: boolean = false;
   authEndpoint: string = '/auth/spotify/logged-in';
 
   constructor(private http: Http ) {}
@@ -16,18 +15,10 @@ export class AuthService {
       'Expires': -1
     });
     let options = new RequestOptions({ headers: headers });
-
-    let observable = Observable.create(observer => {
-      this.http.get(this.authEndpoint, options).subscribe((resp) => {
-        this.hasToken = resp.json();
-        observer.next(this.hasToken);
-        observer.complete();
-      },
-      () => {
-        observer.next(false);
-        observer.complete();
+    let observable = this.http.get(this.authEndpoint, options)
+      .map( resp => {
+        return resp.json() as boolean;
       });
-    });
     return observable;
   }
 }

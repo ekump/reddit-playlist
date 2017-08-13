@@ -2,8 +2,10 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { SpotifyService } from '../services';
+import { SpotifyTrack } from '../models';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory').SpotifyUserFactory;
+const SpotifyTrackFactory = require('../../factories/spotify_track_factory').SpotifyTrackFactory;
 
 let spotifyService: SpotifyService;
 let backend = new MockBackend();
@@ -28,6 +30,38 @@ describe('SpotifyService', () => {
       let getMeObservable = spotifyService.getMe();
       getMeObservable.subscribe((spotifyUser) => {
         expect(spotifyUser).toEqual(spotifyService.spotifyUser);
+        done();
+      });
+    });
+    it('returns an observable with a cached spotify user', (done) => {
+      spyOn(http, 'get').and.callThrough();
+      spotifyService.spotifyUser = SpotifyUserFactory.build();
+      let getMeObservable = spotifyService.getMe();
+      getMeObservable.subscribe((spotifyUser) => {
+        expect(spotifyUser).toEqual(spotifyService.spotifyUser);
+        expect(http.get).not.toHaveBeenCalled();
+        done();
+      });
+    });
+    it('returns an observable with an existing observable if request already in progress', (done) => {
+      spyOn(http, 'get').and.callThrough();
+      spotifyService.meObservable = Observable.of(SpotifyUserFactory.build());
+      let getMeObservable = spotifyService.getMe();
+      getMeObservable.subscribe( () => {
+        expect(http.get).not.toHaveBeenCalled();
+        done();
+      });
+    });
+  });
+
+  describe('#searchForSongs', () => {
+    let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
+
+    it('calls the spotify service for each post', (done) => {
+      let spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(Observable.of([new SpotifyTrack(SpotifyTrackFactory.build())]));
+      let searchObservable = spotifyService.searchForSongs(posts);
+      searchObservable.subscribe( () => {
+        expect(spotifySearchSpy.calls.count()).toBe(2);
         done();
       });
     });
@@ -103,6 +137,37 @@ describe('SpotifyService', () => {
     it('should strip out both parenthesis and brackets', () => {
       let actualResult = spotifyService.sanitizeSongTitle('My Bloody Valentine - To Here Knows When (1991) [shoegaze]');
       expect(actualResult).toBe('My Bloody Valentine - To Here Knows When');
+    });
+  });
+
+  describe('#matchSearchResults', () => {
+    it('matches a post to a spotify track that has been returned as part of the search', done => {
+      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let post = 'Test Artist - Test Track'
+      let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
+
+      expect(actualSpotifyTracks.length).toBe(1);
+      expect(actualSpotifyTracks[0].name).toBe(spotifyTracks[0].name);
+      done();
+    });
+
+    it('matches when post has spaces or different capitalization', done => {
+      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let post = 'Test arTist - Test TRAck   '
+      let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
+
+      expect(actualSpotifyTracks.length).toBe(1);
+      expect(actualSpotifyTracks[0].name).toBe(spotifyTracks[0].name);
+      done();
+    });
+
+    it('rejects tracks where song title matches but artist does not', done => {
+      let spotifyTracks = [new SpotifyTrack(SpotifyTrackFactory.build())];
+      let post = 'Galaxie 500 - Test Track'
+      let actualSpotifyTracks = spotifyService.matchSearchResults(post, spotifyTracks);
+
+      expect(actualSpotifyTracks.length).toBe(0);
+      done();
     });
   });
 });
