@@ -100,9 +100,7 @@ describe('SpotifyService', () => {
           return s.uri;
         }),
       };
-      createObservable.subscribe(() => {
-        done();
-      });
+      createObservable.subscribe(done);
     });
 
     it('should call http post twice', () => {
