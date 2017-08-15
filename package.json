@@ -24,7 +24,8 @@
     "update-webdriver": "./node_modules/.bin/webdriver-manager update",
     "watch": "npm run start:dev -- --watch --hot",
     "specs": "concurrently --kill-others --success first \"karma start\"",
-    "specs:debug": "concurrently --kill-others --success first \"karma start --single-run=false\""
+    "specs:debug": "concurrently --kill-others --success first \"karma start --single-run=false\"",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "@angular/common": "~2.0.0",
@@ -81,6 +82,7 @@
     "chalk": "^1.1.3",
     "concurrently": "^3.1.0",
     "cucumber": "^1.3.0",
+    "husky": "^0.14.3",
     "istanbul": "^0.4.5",
     "istanbul-instrumenter-loader": "^2.0.0",
     "jasmine": "^2.5.2",
@@ -92,8 +94,10 @@
     "karma-mocha-reporter": "^2.0.0",
     "karma-source-map-support": "^1.2.0",
     "karma-webpack": "^1.8.0",
+    "lint-staged": "^4.0.3",
     "localtunnel": "^1.8.1",
     "passport-mocked": "0.0.5",
+    "prettier-miscellaneous": "^1.5.3",
     "protractor": "^4.0.9",
     "protractor-cucumber-framework": "^0.6.0",
     "q": "^1.4.1",
@@ -103,5 +107,11 @@
     "selenium-server-standalone-jar": "^2.53.0",
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2"
+  },
+  "lint-staged": {
+    "src/**/*.{html,ts,scss}": [
+      "prettier --write --single-quote --trailing-comma es5 --align-object-properties true --space-before-function-paren true --braces-spacing true --bracket-spacing true --no-space-empty-fn",
+      "git add"
+    ]
   }
 }
