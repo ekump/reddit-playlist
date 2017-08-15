@@ -5,13 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyUser } from '../models';
+import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
 import { HomeComponent } from './home.component';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory')
   .SpotifyUserFactory;
 const SpotifyTrackFactory = require('../../factories/spotify_track_factory')
   .SpotifyTrackFactory;
+
+const SpotifyPlaylistFactory = require('../../factories/spotify_playlist_factory')
+  .SpotifyPlaylistFactory;
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -42,10 +45,13 @@ describe('HomeComponent', () => {
 
   let mockedSpotifyService = {
     getMe (): Observable<SpotifyUser> {
-      return Observable.from([ SpotifyUserFactory.build() ]);
+      return Observable.of(SpotifyUserFactory.build());
     },
     searchForSongs (): Observable<Array<SpotifyTrack>> {
-      return Observable.from([ SpotifyTrackFactory.build() ]);
+      return Observable.of(SpotifyTrackFactory.build());
+    },
+    createPlaylist (): Observable<SpotifyPlaylist> {
+      return Observable.of(SpotifyPlaylistFactory.build());
     },
   };
 
@@ -176,7 +182,6 @@ describe('HomeComponent', () => {
       component.searchSpotifyForSongs();
 
       expect(injectedSpotifyService.searchForSongs).toHaveBeenCalled();
-      //expect(component.songs).toEqual(returnArray);
     });
   });
 
@@ -190,6 +195,13 @@ describe('HomeComponent', () => {
   describe('#getPostsFromSubReddit', () => {
     it('sets list of posts', () => {
       component.getPostsFromSubReddit();
+      expect(component.posts).toEqual(posts);
+    });
+  });
+
+  describe('#createPlaylist', () => {
+    it(' ', () => {
+      component.createPlaylist();
       expect(component.posts).toEqual(posts);
     });
   });
