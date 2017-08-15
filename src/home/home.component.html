@@ -1,13 +1,11 @@
 
 <p class="redditPlaylist">reddit playlist</p>
-
 <a href="/auth/spotify"
   *ngif="!isSpotifyAuthenticated"
   class="login-spotify">Login to Spotify
 </a>
 
 <div *ngif="spotifyUser">
-
   <div class="spotify-logged-in-status">Logged in to Spotify as: {{ spotifyUser.display_name }}
   </div>
 </div>
@@ -23,11 +21,9 @@
     </option>
   </select>
 </div>
-
 <div class="current-status"
   *ngif="fetchFromRedditInProgress">Attempting to fetch songs for {{ subReddit }}
 </div>
-
 <div class="current-status"
   *ngif="searchSpotifyInProgress">Searching spotify for songs posted in {{ subReddit }}
 </div>
@@ -46,9 +42,7 @@
   <span>Songs</span>
 
   <ul>
-
     <li *ngfor="let song of songs">
-
       <a href="{{song.external_urls.spotify}}">{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}
       </a>
     </li>
