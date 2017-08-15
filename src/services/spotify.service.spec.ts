@@ -2,7 +2,7 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { SpotifyService } from '../services';
-import { SpotifyTrack } from '../models';
+import { SpotifyTrack, SpotifyPlaylist } from '../models';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory')
   .SpotifyUserFactory;
@@ -53,6 +53,73 @@ describe('SpotifyService', () => {
         expect(http.get).not.toHaveBeenCalled();
         done();
       });
+    });
+  });
+
+  describe('#createPlaylist', () => {
+    let createObservable: Observable<SpotifyPlaylist>;
+    let createPlaylistSpy;
+    let createRequestBody;
+    let headers: Headers;
+    let options: RequestOptions;
+    let spotifyTracks: Array<SpotifyTrack>;
+    let addTracksRequestBody;
+    beforeEach(done => {
+      let resp = {
+        json () {
+          return {
+            id: '123',
+            name: 'created_playlist',
+            uri: 'a_test_uri',
+            snapshot_id: 'snapshot123',
+          };
+        },
+      };
+
+      let observable = Observable.of(resp);
+      createPlaylistSpy = spyOn(http, 'post').and.returnValue(observable);
+      spotifyService.spotifyUser = SpotifyUserFactory.build({ id: 'meUser' });
+      spotifyTracks = [
+        SpotifyTrackFactory.build({ uri: '123' }),
+        SpotifyTrackFactory.build({ uri: '456' }),
+      ];
+      createObservable = spotifyService.createPlaylist(
+        'r/blackMetal',
+        spotifyTracks
+      );
+      headers = new Headers({
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: -1,
+        'content-type': 'application/json',
+      });
+      options = new RequestOptions({ headers: headers });
+      createRequestBody = { name: 'Reddit Playlist - r/blackMetal' };
+      addTracksRequestBody = {
+        uris: spotifyTracks.map(function (s){
+          return s.uri;
+        }),
+      };
+      createObservable.subscribe(done);
+    });
+
+    it('should call http post twice', () => {
+      expect(createPlaylistSpy.calls.count()).toBe(2);
+    });
+
+    it('should call the spotify create playlist endpoint with the correct parameters', () => {
+      expect(createPlaylistSpy).toHaveBeenCalledWith(
+        '/s/v1/users/meUser/playlists',
+        createRequestBody,
+        options
+      );
+    });
+    it('should call the spotify add songs to playlist endpoint with the correct parameters', () => {
+      expect(createPlaylistSpy.calls.mostRecent().args).toEqual([
+        '/s/v1/users/meUser/playlists/123/tracks',
+        addTracksRequestBody,
+        options,
+      ]);
     });
   });
 

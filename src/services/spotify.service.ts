@@ -3,7 +3,7 @@ import { Headers, Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 
-import { SpotifyTrack, SpotifyUser } from '../models';
+import { SpotifyTrack, SpotifyUser, SpotifyPlaylist } from '../models';
 
 const Rx = require('rxjs');
 
@@ -13,7 +13,9 @@ export class SpotifyService {
   meObservable: Observable<SpotifyUser>;
   searchObservable: Observable<Array<SpotifyTrack>>;
   searchObservables: any = [];
+  createPlaylistObservable: Observable<SpotifyPlaylist>;
   songs: any = [];
+  playlist: SpotifyPlaylist;
   meEndpoint: string = '/s/v1/me';
   searchEndpoint: string = '/s/v1/search';
   constructor (private http: Http) {}
@@ -38,6 +40,41 @@ export class SpotifyService {
       });
       return this.meObservable;
     }
+  }
+
+  createPlaylist (
+    subReddit: string,
+    songs: Array<SpotifyTrack>
+  ): Observable<SpotifyPlaylist> {
+    let createPlaylistEndpoint: string = `/s/v1/users/${this.spotifyUser
+      .id}/playlists`;
+    let headers = new Headers({
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      Expires: -1,
+      'content-type': 'application/json',
+    });
+    let requestBody = { name: `Reddit Playlist - ${subReddit}` };
+    let options = new RequestOptions({ headers: headers });
+    this.createPlaylistObservable = this.http
+      .post(createPlaylistEndpoint, requestBody, options)
+      .map(resp => {
+        return resp.json();
+      })
+      .flatMap(resp => {
+        let addSongsToPlaylistEndpoint: string = `${createPlaylistEndpoint}/${resp.id}/tracks`;
+        let requestBody = {
+          uris: songs.map(function (s){
+            return s.uri;
+          }),
+        };
+        return this.http
+          .post(addSongsToPlaylistEndpoint, requestBody, options)
+          .map(resp => {
+            return resp.json();
+          });
+      });
+    return this.createPlaylistObservable;
   }
 
   searchForSongs (posts: Array<string>): Observable<Array<SpotifyTrack>> {

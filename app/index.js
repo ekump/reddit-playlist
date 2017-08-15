@@ -36,12 +36,22 @@ passport.use(
     next(null, { accessToken: accessToken, refreshToken: refreshToken });
   })
 );
-app.get('/auth/spotify', passport.authenticate('spotify'));
+app.get(
+  '/auth/spotify',
+  passport.authenticate('spotify', {
+    scope      : [
+      'playlist-read-private',
+      'playlist-modify-public',
+      'playlist-modify-private',
+    ],
+    showDialog : true,
+  })
+);
 app.get(
   '/auth/spotify/callback',
   passport.authenticate('spotify', {
-    failureRedirect: '/login',
-    successRedirect: '/home',
+    failureRedirect : '/login',
+    successRedirect : '/home',
   })
 );
 
