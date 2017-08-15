@@ -8,58 +8,57 @@ import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
 import { HomeComponent } from './home.component';
 
-const SpotifyUserFactory = require('../../factories/spotify_user_factory').SpotifyUserFactory;
-const SpotifyTrackFactory = require('../../factories/spotify_track_factory').SpotifyTrackFactory;
+const SpotifyUserFactory = require('../../factories/spotify_user_factory')
+  .SpotifyUserFactory;
+const SpotifyTrackFactory = require('../../factories/spotify_track_factory')
+  .SpotifyTrackFactory;
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
   let validLogin: boolean = false;
-  let subReddits: Array<string> =[ '/r/blackMetal', '/r/DSBM' ];
-  let posts: Array<string> = [ 'Converge - Jane Doe', 'Michael Jackson - Beat It'];
+  let subReddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
+  let posts: Array<string> = [
+    'Converge - Jane Doe',
+    'Michael Jackson - Beat It',
+  ];
   let injectedSpotifyService: any;
 
-
   let mockedAuthService = {
-    isLoggedInToSpotify() {
+    isLoggedInToSpotify () {
       return Observable.of(validLogin);
-    }
+    },
   };
 
   let mockedRedditService = {
-    getPostsFromSubReddit() {
-      return Observable.from([posts]);
+    getPostsFromSubReddit () {
+      return Observable.from([ posts ]);
     },
-    getSubReddits(): Observable<Array<string>> {
-      return Observable.from([subReddits]);
-    }
+    getSubReddits (): Observable<Array<string>> {
+      return Observable.from([ subReddits ]);
+    },
   };
 
   let mockedSpotifyService = {
-    getMe(): Observable<SpotifyUser> {
+    getMe (): Observable<SpotifyUser> {
       return Observable.from([ SpotifyUserFactory.build() ]);
     },
-    searchForSongs(): Observable<Array<SpotifyTrack>> {
+    searchForSongs (): Observable<Array<SpotifyTrack>> {
       return Observable.from([ SpotifyTrackFactory.build() ]);
-    }
+    },
   };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        HomeComponent
-      ],
-      imports: [
-        HttpModule,
-        FormsModule,
-      ],
+      declarations: [ HomeComponent ],
+      imports: [ HttpModule, FormsModule ],
       providers: [
         { provide: AuthService, useValue: mockedAuthService },
         { provide: RedditService, useValue: mockedRedditService },
-        { provide: SpotifyService, useValue: mockedSpotifyService }
+        { provide: SpotifyService, useValue: mockedSpotifyService },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     });
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -71,15 +70,21 @@ describe('HomeComponent', () => {
     it('has the correct heading', () => {
       debugElement = fixture.debugElement.query(By.css('.redditPlaylist'));
 
-      expect(debugElement.nativeElement.textContent).toContain('reddit playlist');
+      expect(debugElement.nativeElement.textContent).toContain(
+        'reddit playlist'
+      );
     });
 
     it('displays the spotify user display name when logged in', () => {
       component.spotifyUser = SpotifyUserFactory.build();
       fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.spotify-logged-in-status'));
+      debugElement = fixture.debugElement.query(
+        By.css('.spotify-logged-in-status')
+      );
 
-      expect(debugElement.nativeElement.textContent).toContain('William de Fault');
+      expect(debugElement.nativeElement.textContent).toContain(
+        'William de Fault'
+      );
     });
 
     it('displays correct satus when fetchFromRedditInProgress', () => {
@@ -88,7 +93,9 @@ describe('HomeComponent', () => {
       fixture.detectChanges();
       debugElement = fixture.debugElement.query(By.css('.current-status'));
 
-      expect(debugElement.nativeElement.textContent).toContain('Attempting to fetch songs for /r/test');
+      expect(debugElement.nativeElement.textContent).toContain(
+        'Attempting to fetch songs for /r/test'
+      );
 
       component.subReddit = '/r/test';
       component.fetchFromRedditInProgress = false;
@@ -104,7 +111,9 @@ describe('HomeComponent', () => {
       fixture.detectChanges();
       debugElement = fixture.debugElement.query(By.css('.current-status'));
 
-      expect(debugElement.nativeElement.textContent).toContain('Searching spotify for songs posted in /r/test');
+      expect(debugElement.nativeElement.textContent).toContain(
+        'Searching spotify for songs posted in /r/test'
+      );
 
       component.subReddit = '/r/test';
       component.searchSpotifyInProgress = false;
@@ -155,10 +164,14 @@ describe('HomeComponent', () => {
 
   describe('#searchSpotifyForSongs', () => {
     it('calls the search service and sets songs', () => {
-      let returnArray: Array<SpotifyTrack> = [<SpotifyTrack> SpotifyTrackFactory.build()];
-      let posts: Array<string> = ['post 1', 'post 2'];
+      let returnArray: Array<SpotifyTrack> = [
+        <SpotifyTrack>SpotifyTrackFactory.build(),
+      ];
+      let posts: Array<string> = [ 'post 1', 'post 2' ];
 
-      spyOn(injectedSpotifyService, 'searchForSongs').and.returnValue(Observable.from([returnArray]));
+      spyOn(injectedSpotifyService, 'searchForSongs').and.returnValue(
+        Observable.from([ returnArray ])
+      );
       component.posts = posts;
       component.searchSpotifyForSongs();
 

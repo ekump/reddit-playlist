@@ -8,23 +8,10 @@ import { AuthService, RedditService, SpotifyService } from '../services';
 import { routing } from './app.routing';
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    FormsModule,
-    routing,
-    HttpModule
-  ],
-  declarations: [
-    AppComponent,
-    HomeComponent
-  ],
-  providers: [
-    AuthService,
-    RedditService,
-    SpotifyService
-  ],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [ BrowserModule, FormsModule, routing, HttpModule ],
+  declarations: [ AppComponent, HomeComponent ],
+  providers: [ AuthService, RedditService, SpotifyService ],
+  bootstrap: [ AppComponent ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
 })
-
-export class AppModule { }
+export class AppModule {}
