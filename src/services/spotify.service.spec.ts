@@ -56,6 +56,43 @@ describe('SpotifyService', () => {
     });
   });
 
+  describe('#createPlaylist', () => {
+    it('should call the spotify create playlist endpoint with the correct parameters', done => {
+      let resp = {
+        json () {
+          return {
+            name: 'created_playlist',
+            uri: 'a_test_uri',
+            snapshot_id: 'snapshot123',
+          };
+        },
+      };
+
+      let observable = Observable.of(resp);
+      spyOn(http, 'post').and.returnValue(observable);
+      spotifyService.spotifyUser = SpotifyUserFactory.build({ id: 'meUser' });
+      let createObservable = spotifyService.createPlaylist('r/blackMetal', [
+        SpotifyTrackFactory.build(),
+      ]);
+      createObservable.subscribe(() => {
+        let headers = new Headers({
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+          Expires: -1,
+          'content-type': 'application/json',
+        });
+        let options = new RequestOptions({ headers: headers });
+        let requestBody = { name: 'Reddit Playlist - r/blackMetal' };
+        expect(http.post).toHaveBeenCalledWith(
+          '/s/v1/users/meUser/playlists',
+          requestBody,
+          options
+        );
+        done();
+      });
+    });
+  });
+
   describe('#searchForSongs', () => {
     let posts: Array<string> = [
       'Converge - Jane Doe',
