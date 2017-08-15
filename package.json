@@ -109,7 +109,7 @@
     "webpack-hot-middleware": "^2.12.2"
   },
   "lint-staged": {
-    "src/**/*.ts": [
+    "src/**/*.{html,ts,scss}": [
       "prettier --write --single-quote --trailing-comma es5 --align-object-properties true --space-before-function-paren true --braces-spacing true --bracket-spacing true --no-space-empty-fn",
       "git add"
     ]
