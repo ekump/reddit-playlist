@@ -3,10 +3,9 @@ import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
 
 @Component({
-  template: require('./home.component.html')
+  template: require('./home.component.html'),
 })
-
-export class HomeComponent implements OnInit  {
+export class HomeComponent implements OnInit {
   isSpotifyAuthenticated: boolean = false;
   authObserver: any;
   spotifyObserver: any;
@@ -20,42 +19,56 @@ export class HomeComponent implements OnInit  {
   getPostsFromSubRedditObserver: any;
   searchSpotifyForSongsObserver: any;
   songs: Array<SpotifyTrack> = [];
-  constructor(private authService: AuthService, private redditService: RedditService, private spotifyService: SpotifyService ) {}
+  constructor (
+    private authService: AuthService,
+    private redditService: RedditService,
+    private spotifyService: SpotifyService
+  ) {}
 
-  ngOnInit() {
-    this.authObserver = this.authService.isLoggedInToSpotify().subscribe( result => {
-      this.isSpotifyAuthenticated = result;
-      if ( this.isSpotifyAuthenticated ) {
-        this.spotifyObserver = this.spotifyService.getMe().subscribe( result => {
-          this.spotifyUser = result;
-        });
-      }
-    });
+  ngOnInit () {
+    this.authObserver = this.authService
+      .isLoggedInToSpotify()
+      .subscribe(result => {
+        this.isSpotifyAuthenticated = result;
+        if (this.isSpotifyAuthenticated) {
+          this.spotifyObserver = this.spotifyService
+            .getMe()
+            .subscribe(result => {
+              this.spotifyUser = result;
+            });
+        }
+      });
     this.getSubReddits();
   }
 
-  getSubReddits(): void {
-    this.getSubRedditObserver = this.redditService.getSubReddits().subscribe( result => {
-      this.subRedditList = result;
-    });
+  getSubReddits (): void {
+    this.getSubRedditObserver = this.redditService
+      .getSubReddits()
+      .subscribe(result => {
+        this.subRedditList = result;
+      });
   }
 
-  getPostsFromSubReddit(): void {
+  getPostsFromSubReddit (): void {
     this.fetchFromRedditInProgress = true;
-    this.getPostsFromSubRedditObserver = this.redditService.getPostsFromSubReddit(this.subReddit).subscribe( result => {
-      this.fetchFromRedditInProgress = false;
-      this.posts = result;
-      this.searchSpotifyForSongs();
-    });
+    this.getPostsFromSubRedditObserver = this.redditService
+      .getPostsFromSubReddit(this.subReddit)
+      .subscribe(result => {
+        this.fetchFromRedditInProgress = false;
+        this.posts = result;
+        this.searchSpotifyForSongs();
+      });
   }
-  searchSpotifyForSongs(): void {
+  searchSpotifyForSongs (): void {
     this.songs = [];
-    this.searchSpotifyForSongsObserver = this.spotifyService.searchForSongs(this.posts).subscribe( results => {
-      this.songs = this.songs.concat(results);
-   });
+    this.searchSpotifyForSongsObserver = this.spotifyService
+      .searchForSongs(this.posts)
+      .subscribe(results => {
+        this.songs = this.songs.concat(results);
+      });
   }
 
-  onChange() {
+  onChange () {
     this.getPostsFromSubReddit();
   }
 }

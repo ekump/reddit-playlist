@@ -1,30 +1,56 @@
-<p class='redditPlaylist'>reddit playlist</p>
-<a href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
-<div *ngIf="spotifyUser">
-  <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
+
+<p class="redditPlaylist">reddit playlist</p>
+
+<a href="/auth/spotify"
+  *ngif="!isSpotifyAuthenticated"
+  class="login-spotify">Login to Spotify
+</a>
+
+<div *ngif="spotifyUser">
+
+  <div class="spotify-logged-in-status">Logged in to Spotify as: {{ spotifyUser.display_name }}
+  </div>
 </div>
+
 <div>
   <label>Subreddit</label>
-  <select [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
-    <option *ngFor="let sub of subRedditList"
-      [selected]="sub == subReddit">
-    {{ sub }}
+
+  <select [(ngmodel)]="subReddit"
+    (ngmodelchange)="onChange($event)">
+
+    <option *ngfor="let sub of subRedditList"
+      [selected]="sub == subReddit">{{ sub }}
     </option>
   </select>
 </div>
-<div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
-<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>
 
-<div *ngIf='posts'>
+<div class="current-status"
+  *ngif="fetchFromRedditInProgress">Attempting to fetch songs for {{ subReddit }}
+</div>
+
+<div class="current-status"
+  *ngif="searchSpotifyInProgress">Searching spotify for songs posted in {{ subReddit }}
+</div>
+
+<div *ngif="posts">
   <span>Posts</span>
+
   <ul>
-    <li *ngFor="let post of posts">{{post}}</li>
+    <li *ngfor="let post of posts">{{post}}</li>
   </ul>
 </div>
 <br>
-<div *ngIf='songs'>
+
+
+<div *ngif="songs">
   <span>Songs</span>
+
   <ul>
-    <li *ngFor="let song of songs"><a href={{song.external_urls.spotify}}>{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</a></li>
+
+    <li *ngfor="let song of songs">
+
+      <a href="{{song.external_urls.spotify}}">{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}
+      </a>
+    </li>
   </ul>
 </div>
