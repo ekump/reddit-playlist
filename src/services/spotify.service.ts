@@ -42,7 +42,10 @@ export class SpotifyService {
     }
   }
 
-  createPlaylist (songs: Array<SpotifyTrack>): Observable<SpotifyPlaylist> {
+  createPlaylist (
+    subReddit: string,
+    songs: Array<SpotifyTrack>
+  ): Observable<SpotifyPlaylist> {
     let createPlaylistEndpoint: string = `/s/v1/users/${this.spotifyUser
       .id}/playlists`;
     let headers = new Headers({
@@ -51,7 +54,7 @@ export class SpotifyService {
       Expires: -1,
       'content-type': 'application/json',
     });
-    let requestBody = { name: 'test_name' };
+    let requestBody = { name: `Reddit Playlist - ${subReddit}` };
     let options = new RequestOptions({ headers: headers });
     this.createPlaylistObservable = this.http
       .post(createPlaylistEndpoint, requestBody, options)
