@@ -71,9 +71,7 @@ export class HomeComponent implements OnInit {
   createPlaylist (): void {
     this.spotifyService
       .createPlaylist(this.subReddit, this.songs)
-      .subscribe(results => {
-        console.log('results from createPlaylist: ', results);
-      });
+      .subscribe(() => {});
   }
 
   onChange () {
