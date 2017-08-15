@@ -59,10 +59,12 @@ describe('SpotifyService', () => {
   describe('#createPlaylist', () => {
     let createObservable: Observable<SpotifyPlaylist>;
     let createPlaylistSpy;
+    let createRequestBody;
     let headers: Headers;
     let options: RequestOptions;
     let spotifyTracks: Array<SpotifyTrack>;
-    beforeEach(() => {
+    let addTracksRequestBody;
+    beforeEach(done => {
       let resp = {
         json () {
           return {
@@ -92,29 +94,34 @@ describe('SpotifyService', () => {
         'content-type': 'application/json',
       });
       options = new RequestOptions({ headers: headers });
-    });
-    it('should call the spotify create playlist endpoint with the correct parameters', done => {
-      let createRequestBody = { name: 'Reddit Playlist - r/blackMetal' };
-      let addTracksRequestBody = {
+      createRequestBody = { name: 'Reddit Playlist - r/blackMetal' };
+      addTracksRequestBody = {
         uris: spotifyTracks.map(function (s){
           return s.uri;
         }),
       };
-      console.log('addTracksRequestBody: ', addTracksRequestBody);
       createObservable.subscribe(() => {
-        expect(createPlaylistSpy.calls.count()).toBe(2);
-        expect(createPlaylistSpy).toHaveBeenCalledWith(
-          '/s/v1/users/meUser/playlists',
-          createRequestBody,
-          options
-        );
-        expect(createPlaylistSpy.calls.mostRecent().args).toEqual([
-          '/s/v1/users/meUser/playlists/123/tracks',
-          addTracksRequestBody,
-          options,
-        ]);
         done();
       });
+    });
+
+    it('should call http post twice', () => {
+      expect(createPlaylistSpy.calls.count()).toBe(2);
+    });
+
+    it('should call the spotify create playlist endpoint with the correct parameters', () => {
+      expect(createPlaylistSpy).toHaveBeenCalledWith(
+        '/s/v1/users/meUser/playlists',
+        createRequestBody,
+        options
+      );
+    });
+    it('should call the spotify add songs to playlist endpoint with the correct parameters', () => {
+      expect(createPlaylistSpy.calls.mostRecent().args).toEqual([
+        '/s/v1/users/meUser/playlists/123/tracks',
+        addTracksRequestBody,
+        options,
+      ]);
     });
   });
 
