@@ -2,7 +2,7 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { SpotifyService } from '../services';
-import { SpotifyTrack } from '../models';
+import { SpotifyTrack, SpotifyPlaylist } from '../models';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory')
   .SpotifyUserFactory;
@@ -57,7 +57,9 @@ describe('SpotifyService', () => {
   });
 
   describe('#createPlaylist', () => {
-    it('should call the spotify create playlist endpoint with the correct parameters', done => {
+    let createObservable: Observable<SpotifyPlaylist>;
+    let createPlaylistSpy;
+    beforeEach(() => {
       let resp = {
         json () {
           return {
@@ -69,11 +71,13 @@ describe('SpotifyService', () => {
       };
 
       let observable = Observable.of(resp);
-      spyOn(http, 'post').and.returnValue(observable);
+      createPlaylistSpy = spyOn(http, 'post').and.returnValue(observable);
       spotifyService.spotifyUser = SpotifyUserFactory.build({ id: 'meUser' });
-      let createObservable = spotifyService.createPlaylist('r/blackMetal', [
+      createObservable = spotifyService.createPlaylist('r/blackMetal', [
         SpotifyTrackFactory.build(),
       ]);
+    });
+    it('should call the spotify create playlist endpoint with the correct parameters', done => {
       createObservable.subscribe(() => {
         let headers = new Headers({
           'Cache-Control': 'no-cache',
