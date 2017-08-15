@@ -60,6 +60,18 @@ export class SpotifyService {
       .post(createPlaylistEndpoint, requestBody, options)
       .map(resp => {
         return resp.json();
+      })
+      .flatMap(resp => {
+        let addSongsToPlaylistEndpoint: string = `${createPlaylistEndpoint}/${resp.id}/tracks`;
+        let songUris = songs.map(function (s){
+          return s.uri;
+        });
+        let requestBody = { uris: songUris };
+        return this.http
+          .post(addSongsToPlaylistEndpoint, requestBody, options)
+          .map(resp => {
+            return resp.json();
+          });
       });
     return this.createPlaylistObservable;
   }

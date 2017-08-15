@@ -22,4 +22,5 @@ export interface SpotifyTrack {
   preview_url: string;
   id: string;
   href: string;
+  uri: string;
 }
