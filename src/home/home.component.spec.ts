@@ -200,9 +200,18 @@ describe('HomeComponent', () => {
   });
 
   describe('#createPlaylist', () => {
-    it(' ', () => {
+    it('calls spotifyService.createPlaylist with correct parameters', () => {
+      component.subReddit = 'r/BlackMetal';
+      component.songs = [ SpotifyTrackFactory.build() ];
+      let createPlaylistSpy = spyOn(
+        injectedSpotifyService,
+        'createPlaylist'
+      ).and.returnValue(Observable.of(SpotifyPlaylistFactory.build()));
       component.createPlaylist();
-      expect(component.posts).toEqual(posts);
+      expect(createPlaylistSpy).toHaveBeenCalledWith(
+        component.subReddit,
+        component.songs
+      );
     });
   });
 });
