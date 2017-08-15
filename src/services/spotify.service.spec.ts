@@ -59,10 +59,14 @@ describe('SpotifyService', () => {
   describe('#createPlaylist', () => {
     let createObservable: Observable<SpotifyPlaylist>;
     let createPlaylistSpy;
+    let headers: Headers;
+    let options: RequestOptions;
+    let spotifyTracks: Array<SpotifyTrack>;
     beforeEach(() => {
       let resp = {
         json () {
           return {
+            id: '123',
             name: 'created_playlist',
             uri: 'a_test_uri',
             snapshot_id: 'snapshot123',
@@ -73,25 +77,42 @@ describe('SpotifyService', () => {
       let observable = Observable.of(resp);
       createPlaylistSpy = spyOn(http, 'post').and.returnValue(observable);
       spotifyService.spotifyUser = SpotifyUserFactory.build({ id: 'meUser' });
-      createObservable = spotifyService.createPlaylist('r/blackMetal', [
-        SpotifyTrackFactory.build(),
-      ]);
+      spotifyTracks = [
+        SpotifyTrackFactory.build({ uri: '123' }),
+        SpotifyTrackFactory.build({ uri: '456' }),
+      ];
+      createObservable = spotifyService.createPlaylist(
+        'r/blackMetal',
+        spotifyTracks
+      );
+      headers = new Headers({
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+        Expires: -1,
+        'content-type': 'application/json',
+      });
+      options = new RequestOptions({ headers: headers });
     });
     it('should call the spotify create playlist endpoint with the correct parameters', done => {
+      let createRequestBody = { name: 'Reddit Playlist - r/blackMetal' };
+      let addTracksRequestBody = {
+        uris: spotifyTracks.map(function (s){
+          return s.uri;
+        }),
+      };
+      console.log('addTracksRequestBody: ', addTracksRequestBody);
       createObservable.subscribe(() => {
-        let headers = new Headers({
-          'Cache-Control': 'no-cache',
-          Pragma: 'no-cache',
-          Expires: -1,
-          'content-type': 'application/json',
-        });
-        let options = new RequestOptions({ headers: headers });
-        let requestBody = { name: 'Reddit Playlist - r/blackMetal' };
-        expect(http.post).toHaveBeenCalledWith(
+        expect(createPlaylistSpy.calls.count()).toBe(2);
+        expect(createPlaylistSpy).toHaveBeenCalledWith(
           '/s/v1/users/meUser/playlists',
-          requestBody,
+          createRequestBody,
           options
         );
+        expect(createPlaylistSpy.calls.mostRecent().args).toEqual([
+          '/s/v1/users/meUser/playlists/123/tracks',
+          addTracksRequestBody,
+          options,
+        ]);
         done();
       });
     });
