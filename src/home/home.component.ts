@@ -4,6 +4,7 @@ import { SpotifyTrack, SpotifyUser } from '../models';
 
 @Component({
   template: require('./home.component.html'),
+  styles: [ require('./home.component.scss') ],
 })
 export class HomeComponent implements OnInit {
   isSpotifyAuthenticated: boolean = false;
