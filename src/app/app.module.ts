@@ -6,9 +6,17 @@ import { FormsModule } from '@angular/forms';
 import { HomeComponent } from '../home/home.component';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { routing } from './app.routing';
-
+import { MaterialModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
-  imports: [ BrowserModule, FormsModule, routing, HttpModule ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    routing,
+    HttpModule,
+    MaterialModule,
+    BrowserAnimationsModule,
+  ],
   declarations: [ AppComponent, HomeComponent ],
   providers: [ AuthService, RedditService, SpotifyService ],
   bootstrap: [ AppComponent ],

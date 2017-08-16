@@ -1,6 +1,10 @@
-<p class='redditPlaylist'>reddit playlist</p>
+<md-toolbar color="primary">
+  <div>Reddit playlist</div>
+</md-toolbar>
 
-<a href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
+  <div>
+    <a md-raised-button color='warn' href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
+  </div>
 
 <div *ngIf="spotifyUser">
   <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
@@ -19,7 +23,7 @@
 
 <div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>
 
-<button *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
+<button md-raised-button color="primary"  *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
 
 <div *ngIf='posts'>
   <span>Posts</span>
