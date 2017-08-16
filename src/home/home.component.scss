@@ -1,4 +1,3 @@
-.login-spotify,
 .create-playlist {
   margin: 10px 0 10px 0;
 }
@@ -14,4 +13,10 @@
 .list {
   padding-top: 5px;
   padding-bottom: 5px;
+}
+.select-label {
+  vertical-align: bottom;
+}
+.app-toolbar-filler {
+  flex: 1 1 auto;
 }

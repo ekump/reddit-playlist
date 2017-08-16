@@ -1,16 +1,17 @@
+    <!--<a md-raised-button flex color='warn' href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a></div>-->
+
 <md-toolbar color="primary">
-  <div>Reddit playlist</div>
+
+Reddit Playlist Generator
+
+<span class="app-toolbar-filler"></span>
+<a md-button color='warn' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
+<div *ngIf="spotifyUser" class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
 </md-toolbar>
 
-<div>
-  <a md-raised-button color='warn' href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
-</div>
-<div *ngIf="spotifyUser">
-  <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
-</div>
 
 <div layout='row' layout-fill layout-margin layout-align='start center'>
-  <label>Selected Subreddit</label>
+  <label class='select-label'>Selected Subreddit</label>
   <md-select class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
     <md-option *ngFor="let sub of subRedditList"
       [selected]="sub == subReddit" [value]="sub">
