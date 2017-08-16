@@ -14,7 +14,7 @@ export class SpotifyService {
   searchObservable: Observable<Array<SpotifyTrack>>;
   searchObservables: any = [];
   createPlaylistObservable: Observable<SpotifyPlaylist>;
-  songs: any = [];
+  songs: Array<SpotifyTrack> = [];
   playlist: SpotifyPlaylist;
   meEndpoint: string = '/s/v1/me';
   searchEndpoint: string = '/s/v1/search';
@@ -78,6 +78,7 @@ export class SpotifyService {
   }
 
   searchForSongs (posts: Array<string>): Observable<Array<SpotifyTrack>> {
+    this.searchObservables = [];
     posts.forEach(
       function (post){
         let searchObservable = this.search(post).map(resp => {

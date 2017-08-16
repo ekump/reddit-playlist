@@ -60,7 +60,6 @@ export class HomeComponent implements OnInit {
       });
   }
   searchSpotifyForSongs (): void {
-    this.songs = [];
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
       .subscribe(results => {
@@ -75,6 +74,8 @@ export class HomeComponent implements OnInit {
   }
 
   onChange () {
+    this.posts = [];
+    this.songs = [];
     this.getPostsFromSubReddit();
   }
 }
