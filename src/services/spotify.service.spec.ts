@@ -128,16 +128,26 @@ describe('SpotifyService', () => {
       'Converge - Jane Doe',
       'Michael Jackson - Beat It',
     ];
-
-    it('calls the spotify service for each post', done => {
-      let spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(
+    let spotifySearchSpy;
+    let searchObservable;
+    beforeEach(done => {
+      spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(
         Observable.of([ <SpotifyTrack>SpotifyTrackFactory.build() ])
       );
-      let searchObservable = spotifyService.searchForSongs(posts);
-      searchObservable.subscribe(() => {
-        expect(spotifySearchSpy.calls.count()).toBe(2);
-        done();
-      });
+      spotifyService.searchObservables = [
+        Observable.of(1),
+        Observable.of(2),
+        Observable.of(3),
+      ];
+      searchObservable = spotifyService.searchForSongs(posts);
+      searchObservable.subscribe(done);
+    });
+    it('clears the searchObservables array before starting search', () => {
+      expect(spotifyService.searchObservables.length).toBe(2);
+    });
+
+    it('calls the spotify service for each post', () => {
+      expect(spotifySearchSpy.calls.count()).toBe(2);
     });
   });
 

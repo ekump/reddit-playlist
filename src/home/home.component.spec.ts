@@ -166,6 +166,20 @@ describe('HomeComponent', () => {
 
       expect(component.getPostsFromSubReddit).toHaveBeenCalled();
     });
+    it('clears current posts', () => {
+      component.posts = [ 'post 1', 'post 2' ];
+      spyOn(component, 'getPostsFromSubReddit').and.returnValue(null);
+      component.onChange();
+
+      expect(component.posts).toEqual([]);
+    });
+    it('clears current songs', () => {
+      component.songs = [ SpotifyTrackFactory.build() ];
+      spyOn(component, 'getPostsFromSubReddit').and.returnValue(null);
+      component.onChange();
+
+      expect(component.songs).toEqual([]);
+    });
   });
 
   describe('#searchSpotifyForSongs', () => {
