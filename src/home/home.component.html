@@ -2,41 +2,54 @@
   <div>Reddit playlist</div>
 </md-toolbar>
 
-  <div>
-    <a md-raised-button color='warn' href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
-  </div>
-
+<div>
+  <a md-raised-button color='warn' href='/auth/spotify' *ngIf="!isSpotifyAuthenticated" class='login-spotify'>Login to Spotify</a>
+</div>
 <div *ngIf="spotifyUser">
   <div class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
 </div>
-<div>
-  <label>Subreddit</label>
-  <select [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
-    <option *ngFor="let sub of subRedditList"
-      [selected]="sub == subReddit">
+
+<div layout='row' layout-fill layout-margin layout-align='start center'>
+  <label>Selected Subreddit</label>
+  <md-select class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
+    <md-option *ngFor="let sub of subRedditList"
+      [selected]="sub == subReddit" [value]="sub">
      {{ sub }}
-    </option>
-  </select>
+    </md-option>
+  </md-select>
 </div>
 
 <div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
 
 <div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>
 
-<button md-raised-button color="primary"  *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
+<button md-raised-button class='create-playlist' color="primary"  *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
 
-<div *ngIf='posts'>
-  <span>Posts</span>
-  <ul>
-    <li *ngFor="let post of posts">{{post}}</li>
-  </ul>
-</div>
 
 <br>
 
-<div *ngIf='songs'>
-  <span>Songs</span>
-  <ul>
-    <li *ngFor="let song of songs"><a href={{song.external_urls.spotify}}>{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</a></li>
-  </ul>
-</div>
+
+<md-card>
+  <md-tab-group [selectedIndex]="0">
+    <md-tab label="Summary">
+      <h3>Summary Info</h3>
+      <span>Nothing to see here yet</span>
+    </md-tab>
+    <md-tab label="Reddit Details">
+      <h3>Reddit Post Details</h3>
+      <div *ngIf='posts'>
+        <md-list class='list'>
+          <md-list-item class='list-item' *ngFor="let post of posts">{{post}}</md-list-item>
+        </md-list>
+      </div>
+    </md-tab>
+    <md-tab label="Spotify Details">
+      <h3>Spotify Details</h3>
+      <div *ngIf='songs.length'>
+        <md-list class='list'>
+          <md-list-item class='list-item' *ngFor="let song of songs"><a href={{song.external_urls.spotify}}>{{song.artists[0].name}} - {{song.name}} - {{song.album.name}}</a></md-list-item>
+        </md-list>
+      </div>
+    </md-tab>
+  </md-tab-group>
+</md-card>
