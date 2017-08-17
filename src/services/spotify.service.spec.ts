@@ -35,6 +35,7 @@ describe('SpotifyService', () => {
         done();
       });
     });
+
     it('returns an observable with a cached spotify user', done => {
       spyOn(http, 'get').and.callThrough();
       spotifyService.spotifyUser = SpotifyUserFactory.build();
@@ -45,6 +46,7 @@ describe('SpotifyService', () => {
         done();
       });
     });
+
     it('returns an observable with an existing observable if request already in progress', done => {
       spyOn(http, 'get').and.callThrough();
       spotifyService.meObservable = Observable.of(SpotifyUserFactory.build());
@@ -149,7 +151,7 @@ describe('SpotifyService', () => {
       ];
       searchObservable = spotifyService.searchForSongs(posts);
       searchObservable.subscribe(resp => {
-        response = response.concat(resp);
+        response = resp;
         done();
       });
     });
@@ -160,10 +162,12 @@ describe('SpotifyService', () => {
     it('calls the spotify service for each post', () => {
       expect(spotifySearchSpy.calls.count()).toBe(2);
     });
+
     it('returns the spotify track when only one track is found', () => {
       expect(response.length).toBe(1);
       expect(response[0].name).toBe('Jane Doe');
     });
+
     it('returns the spotify track with the higher popularity when multiple tracks are found', done => {
       spotifySearchSpy.and.returnValue(
         Observable.of([
@@ -181,9 +185,8 @@ describe('SpotifyService', () => {
       );
       searchObservable = spotifyService.searchForSongs(posts);
       searchObservable.subscribe(resp => {
-        response = response.concat(resp);
-        expect(response[0].popularity).toBe(95);
-        expect(response[0].name).toBe('Jane Doe');
+        expect(resp[0].popularity).toBe(95);
+        expect(resp[0].name).toBe('Jane Doe');
         done();
       });
     });
