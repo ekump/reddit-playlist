@@ -130,9 +130,17 @@ describe('SpotifyService', () => {
     ];
     let spotifySearchSpy;
     let searchObservable;
+    let response: Array<SpotifyTrack>;
     beforeEach(done => {
+      response = new Array<SpotifyTrack>();
       spotifySearchSpy = spyOn(spotifyService, 'search').and.returnValue(
-        Observable.of([ <SpotifyTrack>SpotifyTrackFactory.build() ])
+        Observable.of([
+          <SpotifyTrack>SpotifyTrackFactory.build({
+            name: 'Jane Doe',
+            artists: [ { name: 'Converge' } ],
+            popularity: 95,
+          }),
+        ])
       );
       spotifyService.searchObservables = [
         Observable.of(1),
@@ -140,7 +148,10 @@ describe('SpotifyService', () => {
         Observable.of(3),
       ];
       searchObservable = spotifyService.searchForSongs(posts);
-      searchObservable.subscribe(done);
+      searchObservable.subscribe(resp => {
+        response = response.concat(resp);
+        done();
+      });
     });
     it('clears the searchObservables array before starting search', () => {
       expect(spotifyService.searchObservables.length).toBe(2);
@@ -148,6 +159,33 @@ describe('SpotifyService', () => {
 
     it('calls the spotify service for each post', () => {
       expect(spotifySearchSpy.calls.count()).toBe(2);
+    });
+    it('returns the spotify track when only one track is found', () => {
+      expect(response.length).toBe(1);
+      expect(response[0].name).toBe('Jane Doe');
+    });
+    it('returns the spotify track with the higher popularity when multiple tracks are found', done => {
+      spotifySearchSpy.and.returnValue(
+        Observable.of([
+          <SpotifyTrack>SpotifyTrackFactory.build({
+            name: 'Jane Doe',
+            artists: [ { name: 'Converge' } ],
+            popularity: 75,
+          }),
+          <SpotifyTrack>SpotifyTrackFactory.build({
+            name: 'Jane Doe',
+            artists: [ { name: 'Converge' } ],
+            popularity: 95,
+          }),
+        ])
+      );
+      searchObservable = spotifyService.searchForSongs(posts);
+      searchObservable.subscribe(resp => {
+        response = response.concat(resp);
+        expect(response[0].popularity).toBe(95);
+        expect(response[0].name).toBe('Jane Doe');
+        done();
+      });
     });
   });
 

@@ -22,4 +22,5 @@ module.exports.SpotifyTrackFactory = new Factory()
   .attr('external_urls', function() { return SpotifyExternalUrlsFactory.build();})
   .attr('name', 'Test Track')
   .attr('preview_url', 'http://example.com/preview_url')
+  .attr('popularity', 65)
   .attr('href', 'http://example.com/track_href');
