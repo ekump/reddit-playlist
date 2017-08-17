@@ -1,15 +1,17 @@
-<md-toolbar color="primary">
+<md-toolbar class='header' color="primary">
 
   <span class='app-heading'>Reddit Playlist Generator</span>
 
+<md-progress-bar *ngIf='showProgressBar' color='accent' class="app-progress" mode="indeterminate"></md-progress-bar>
 <span class="app-toolbar-filler"></span>
 <a md-button color='warn' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
-<div *ngIf="spotifyUser" class='spotify-logged-in-status'>Logged in to Spotify as: {{ spotifyUser.display_name }}</div>
+<div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
+<img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
 </md-toolbar>
 
 
 <div layout='row' layout-fill layout-margin layout-align='start center'>
-  <label class='select-label'>Selected Subreddit</label>
+  <label class='select-label'>Select Subreddit</label>
   <md-select class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
     <md-option *ngFor="let sub of subRedditList"
       [selected]="sub == subReddit" [value]="sub">
@@ -18,15 +20,9 @@
   </md-select>
 </div>
 
-<div class='current-status' *ngIf='fetchFromRedditInProgress'>Attempting to fetch songs for {{ subReddit }}</div>
-
-<div class='current-status' *ngIf='searchSpotifyInProgress'>Searching spotify for songs posted in {{ subReddit }}</div>
-
 <button md-raised-button class='create-playlist' color="primary"  *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
 
-
 <br>
-
 
 <md-card>
   <md-tab-group [selectedIndex]="0">
