@@ -10,7 +10,7 @@
 </md-toolbar>
 
 
-<div layout='column' layout-fill layout-margin layout-align='start center'>
+<div layout='row' layout-fill layout-margin layout-align='start center'>
   <label class='select-label'>Select Subreddit</label>
   <md-select class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
     <md-option *ngFor="let sub of subRedditList"
