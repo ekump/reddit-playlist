@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit {
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
       .subscribe(results => {
-        this.songs = this.songs.concat(results);
+        this.songs = results;
         this.showProgressBar = false;
       });
   }
