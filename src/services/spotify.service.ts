@@ -77,13 +77,20 @@ export class SpotifyService {
     return this.createPlaylistObservable;
   }
 
-  searchForSongs (posts: Array<string>): Observable<Array<SpotifyTrack>> {
+  searchForSongs (posts: Array<string>): Observable<SpotifyTrack> {
     this.searchObservables = [];
     posts.forEach(
       function (post){
         let searchObservable = this.search(post).map(resp => {
           let results: Array<SpotifyTrack> = resp;
-          return this.matchSearchResults(post, results);
+          let matchedResults = this.matchSearchResults(post, results);
+          if (matchedResults.length > 1) {
+            return matchedResults.sort(function (a, b){
+              return b.popularity - a.popularity;
+            })[0];
+          } else {
+            return matchedResults;
+          }
         });
         this.searchObservables.push(searchObservable);
       }.bind(this)
