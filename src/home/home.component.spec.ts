@@ -93,38 +93,16 @@ describe('HomeComponent', () => {
       );
     });
 
-    it('displays correct satus when fetchFromRedditInProgress', () => {
-      component.subReddit = '/r/test';
-      component.fetchFromRedditInProgress = true;
+    it('displays progress indicator', () => {
+      component.showProgressBar = true;
       fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.current-status'));
+      debugElement = fixture.debugElement.query(By.css('.app-progress'));
 
-      expect(debugElement.nativeElement.textContent).toContain(
-        'Attempting to fetch songs for /r/test'
-      );
+      expect(debugElement).not.toBeNull();
 
-      component.subReddit = '/r/test';
-      component.fetchFromRedditInProgress = false;
+      component.showProgressBar = false;
       fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.current-status'));
-
-      expect(debugElement).toBeNull();
-    });
-
-    it('displays correct status when searchSpotifyInProgress', () => {
-      component.subReddit = '/r/test';
-      component.searchSpotifyInProgress = true;
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.current-status'));
-
-      expect(debugElement.nativeElement.textContent).toContain(
-        'Searching spotify for songs posted in /r/test'
-      );
-
-      component.subReddit = '/r/test';
-      component.searchSpotifyInProgress = false;
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.current-status'));
+      debugElement = fixture.debugElement.query(By.css('.app-progress'));
 
       expect(debugElement).toBeNull();
     });
