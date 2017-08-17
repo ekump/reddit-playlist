@@ -74,10 +74,10 @@ describe('HomeComponent', () => {
 
   describe('template', () => {
     it('has the correct heading', () => {
-      debugElement = fixture.debugElement.query(By.css('.redditPlaylist'));
+      debugElement = fixture.debugElement.query(By.css('.app-heading'));
 
       expect(debugElement.nativeElement.textContent).toContain(
-        'reddit playlist'
+        'Reddit Playlist Generator'
       );
     });
 
