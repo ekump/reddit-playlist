@@ -14,8 +14,7 @@ export class HomeComponent implements OnInit {
   subRedditList: Array<string>;
   subReddit: string;
   getSubRedditObserver: any;
-  fetchFromRedditInProgress: boolean = false;
-  searchSpotifyInProgress: boolean = false;
+  showProgressBar: boolean = false;
   posts: Array<string>;
   getPostsFromSubRedditObserver: any;
   searchSpotifyForSongsObserver: any;
@@ -51,27 +50,32 @@ export class HomeComponent implements OnInit {
   }
 
   getPostsFromSubReddit (): void {
-    this.fetchFromRedditInProgress = true;
+    this.showProgressBar = true;
     this.getPostsFromSubRedditObserver = this.redditService
       .getPostsFromSubReddit(this.subReddit)
       .subscribe(result => {
-        this.fetchFromRedditInProgress = false;
+        this.showProgressBar = false;
         this.posts = result;
         this.searchSpotifyForSongs();
       });
   }
   searchSpotifyForSongs (): void {
+    this.showProgressBar = true;
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
       .subscribe(results => {
         this.songs = this.songs.concat(results);
+        this.showProgressBar = false;
       });
   }
 
   createPlaylist (): void {
+    this.showProgressBar = true;
     this.spotifyService
       .createPlaylist(this.subReddit, this.songs)
-      .subscribe(() => {});
+      .subscribe(() => {
+        this.showProgressBar = false;
+      });
   }
 
   onChange () {
