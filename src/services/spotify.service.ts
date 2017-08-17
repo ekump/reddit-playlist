@@ -11,7 +11,6 @@ const Rx = require('rxjs');
 export class SpotifyService {
   spotifyUser: SpotifyUser;
   meObservable: Observable<SpotifyUser>;
-  searchObservable: Observable<Array<SpotifyTrack>>;
   searchObservables: any = [];
   createPlaylistObservable: Observable<SpotifyPlaylist>;
   songs: Array<SpotifyTrack> = [];
@@ -77,7 +76,7 @@ export class SpotifyService {
     return this.createPlaylistObservable;
   }
 
-  searchForSongs (posts: Array<string>): Observable<SpotifyTrack> {
+  searchForSongs (posts: Array<string>): Observable<Array<SpotifyTrack>> {
     this.searchObservables = [];
     posts.forEach(
       function (post){
@@ -89,13 +88,17 @@ export class SpotifyService {
               return b.popularity - a.popularity;
             })[0];
           } else {
-            return matchedResults;
+            return matchedResults[0];
           }
         });
         this.searchObservables.push(searchObservable);
       }.bind(this)
     );
-    return Rx.Observable.merge(...this.searchObservables);
+    return Rx.Observable.forkJoin(this.searchObservables).map(resp => {
+      return resp.filter(function (r){
+        return r !== undefined;
+      });
+    });
   }
 
   search (redditPost: string): Observable<Array<SpotifyTrack>> {
@@ -116,13 +119,13 @@ export class SpotifyService {
       searchStrings[0] +
       this.sanitizeSongTitle(searchStrings[1]) +
       '&type=track';
-    this.searchObservable = this.http.get(url, options).map(resp => {
+    let searchObservable = this.http.get(url, options).map(resp => {
       resp.json().tracks.items.forEach(function (item){
         spotifyTracks.push(item);
       });
       return spotifyTracks;
     });
-    return this.searchObservable;
+    return searchObservable;
   }
 
   sanitizeSongTitle (songTitle: string): string {
