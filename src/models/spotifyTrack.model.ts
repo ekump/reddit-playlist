@@ -19,6 +19,7 @@ export interface SpotifyTrack {
   album: SpotifyAlbum;
   external_urls: SpotifyExternalUrls;
   name: string;
+  popularity: number;
   preview_url: string;
   id: string;
   href: string;
