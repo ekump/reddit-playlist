@@ -2,19 +2,17 @@
 
 const HELPERS             = require('./helpers');
 const COMMON_CONFIG       = require('./webpack.common.js');
+const WEBPACK             = require('webpack');
 const WEBPACK_MERGE       = require('webpack-merge');
 const WEBPACK_MD5_HASH    = require('webpack-md5-hash');
 const UGLIFY_JS_PLUGIN    = require('webpack/lib/optimize/UglifyJsPlugin');
 const EXTRACT_TEXT_PLUGIN = require('extract-text-webpack-plugin');
 const ENV_PLUGIN          = require('webpack/lib/EnvironmentPlugin');
 
-const WEB_COMPONENTS_BASE_URL = 'https://web-components-production.herokuapp.com/c/'
-
 module.exports = WEBPACK_MERGE(COMMON_CONFIG.webpackCommon, {
   metadata: {
     title: COMMON_CONFIG.METADATA.title,
     baseUrl: COMMON_CONFIG.METADATA.baseUrl,
-    webComponentsUrl: `${WEB_COMPONENTS_BASE_URL}${COMMON_CONFIG.METADATA.webComponents}.html`,
   },
   debug: false,
   devtool: 'source-map',
@@ -34,7 +32,13 @@ module.exports = WEBPACK_MERGE(COMMON_CONFIG.webpackCommon, {
     new EXTRACT_TEXT_PLUGIN('[name]_[hash].min.css'),
     new ENV_PLUGIN([
       'NODE_ENV',
-      'RAYGUN_KEY'
-    ])
+      'SPOTIFY_API_CLIENT_ID',
+      'SPOTIFY_API_CLIENT_SECRET'
+    ]),
+    new WEBPACK.DefinePlugin({
+      AppConfig: {
+        useProductionAngular: true
+      }
+    })
   ]
 });

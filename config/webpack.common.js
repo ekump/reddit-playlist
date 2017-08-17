@@ -102,6 +102,10 @@ let webpackCommon = {
 
     new WEBPACK.ProvidePlugin({
       Reflect: 'core-js/es7/reflect'
+    }),
+
+    new WEBPACK.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     })
   ],
   postcss: [
