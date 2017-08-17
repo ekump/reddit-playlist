@@ -96,7 +96,6 @@ export class SpotifyService {
     );
     return Rx.Observable.forkJoin(this.searchObservables).map(resp => {
       return resp.filter(function (r){
-        console.log('checking r: ', r);
         return r !== undefined;
       });
     });
