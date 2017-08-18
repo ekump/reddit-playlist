@@ -20,26 +20,26 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
-  let validLogin: boolean = false;
   let subReddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
   let posts: Array<string> = [
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
   let injectedSpotifyService: any;
+  let injectedAuthService: any;
 
   let mockedAuthService = {
     isLoggedInToSpotify () {
-      return Observable.of(validLogin);
+      return Observable.of(true);
     },
   };
 
   let mockedRedditService = {
     getPostsFromSubReddit () {
-      return Observable.from([ posts ]);
+      return Observable.of(posts);
     },
     getSubReddits (): Observable<Array<string>> {
-      return Observable.from([ subReddits ]);
+      return Observable.of(subReddits);
     },
   };
 
@@ -55,6 +55,7 @@ describe('HomeComponent', () => {
     },
   };
 
+  let authServiceSpy;
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ HomeComponent ],
@@ -70,6 +71,11 @@ describe('HomeComponent', () => {
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     injectedSpotifyService = TestBed.get(SpotifyService);
+    injectedAuthService = TestBed.get(AuthService);
+    authServiceSpy = spyOn(
+      injectedAuthService,
+      'isLoggedInToSpotify'
+    ).and.returnValue(Observable.of(true));
   });
 
   describe('template', () => {
@@ -81,7 +87,7 @@ describe('HomeComponent', () => {
       );
     });
 
-    it('displays the spotify user display name when logged in', () => {
+    it('displays the spotify user display name when logged in', done => {
       component.spotifyUser = SpotifyUserFactory.build();
       fixture.detectChanges();
       debugElement = fixture.debugElement.query(
@@ -91,6 +97,7 @@ describe('HomeComponent', () => {
       expect(debugElement.nativeElement.textContent).toContain(
         'William de Fault'
       );
+      done();
     });
 
     it('displays progress indicator', () => {
@@ -106,25 +113,42 @@ describe('HomeComponent', () => {
 
       expect(debugElement).toBeNull();
     });
+
+    it('enables the subreddit select when spotify user is logged in', () => {
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(By.css('.subreddit-select'));
+
+      expect(
+        debugElement.nativeElement.getAttribute('ng-reflect-is-disabled')
+      ).toBe('false');
+    });
+
+    it('disabled the subreddit select when spotify user is logged in', () => {
+      authServiceSpy.and.returnValue(Observable.of(false));
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(By.css('.subreddit-select'));
+
+      expect(
+        debugElement.nativeElement.getAttribute('ng-reflect-is-disabled')
+      ).toBe('true');
+    });
   });
 
   describe('#ngOnInit', () => {
     it('should set spotifyUser', () => {
-      validLogin = true;
       component.ngOnInit();
 
       expect(component.spotifyUser).toBeDefined();
     });
 
     it('should set isSpotifyAuthenticated to true when logged in', () => {
-      validLogin = true;
       component.ngOnInit();
 
       expect(component.isSpotifyAuthenticated).toBe(true);
     });
 
     it('should set isSpotifyAuthenticated to false when logged out', () => {
-      validLogin = false;
+      authServiceSpy.and.returnValue(Observable.of(false));
       component.ngOnInit();
 
       expect(component.isSpotifyAuthenticated).toBe(false);

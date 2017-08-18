@@ -1,9 +1,21 @@
+.app-progress {
+  margin: 20px;
+}
+
+.about-card {
+  line-height: 1.4;
+}
+
+.app-toolbar-filler {
+  flex: 1 1 auto;
+}
+
 .create-playlist {
   margin: 10px 0 10px 0;
 }
 
-.subreddit-select {
-  width: 200px;
+.header {
+  margin-bottom: 10px;
 }
 
 .list-item {
@@ -13,12 +25,11 @@
 .list {
   padding-top: 5px;
   padding-bottom: 5px;
+  height: 500px;
 }
+
 .select-label {
   vertical-align: bottom;
-}
-.app-toolbar-filler {
-  flex: 1 1 auto;
 }
 
 .spotify-image {
@@ -28,9 +39,11 @@
 .spotify-logged-in-status {
   font-size: medium;
 }
-.header {
-  margin-bottom: 10px;
+
+.subreddit-options {
+  padding-top: 20px;
 }
-.app-progress {
-  margin: 20px;
+
+.subreddit-select {
+  width: 200px;
 }
