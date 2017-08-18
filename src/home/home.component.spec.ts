@@ -20,7 +20,6 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
-  let validLogin: boolean = true;
   let subReddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
   let posts: Array<string> = [
     'Converge - Jane Doe',
@@ -31,8 +30,7 @@ describe('HomeComponent', () => {
 
   let mockedAuthService = {
     isLoggedInToSpotify () {
-      console.log('returning: ', validLogin);
-      return Observable.of(validLogin);
+      return Observable.of(true);
     },
   };
 
@@ -138,14 +136,12 @@ describe('HomeComponent', () => {
 
   describe('#ngOnInit', () => {
     it('should set spotifyUser', () => {
-      validLogin = true;
       component.ngOnInit();
 
       expect(component.spotifyUser).toBeDefined();
     });
 
     it('should set isSpotifyAuthenticated to true when logged in', () => {
-      validLogin = true;
       component.ngOnInit();
 
       expect(component.isSpotifyAuthenticated).toBe(true);
