@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
+import { MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
 
 @Component({
   template: require('./home.component.html'),
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   constructor (
     private authService: AuthService,
     private redditService: RedditService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private _dialog: MdDialog
   ) {}
 
   ngOnInit () {
@@ -63,19 +65,28 @@ export class HomeComponent implements OnInit {
     this.showProgressBar = true;
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
-      .subscribe(results => {
-        this.songs = results;
-        this.showProgressBar = false;
-      });
+      .subscribe(
+        results => {
+          this.songs = results;
+          this.showProgressBar = false;
+        },
+        err => {
+          console.log('we have err: ', err.status);
+          this.openDialog();
+        }
+      );
   }
 
   createPlaylist (): void {
     this.showProgressBar = true;
-    this.spotifyService
-      .createPlaylist(this.subReddit, this.songs)
-      .subscribe(() => {
+    this.spotifyService.createPlaylist(this.subReddit, this.songs).subscribe(
+      () => {
         this.showProgressBar = false;
-      });
+      },
+      err => {
+        console.log('we have err: ', err.status);
+      }
+    );
   }
 
   onChange () {
@@ -83,4 +94,26 @@ export class HomeComponent implements OnInit {
     this.songs = [];
     this.getPostsFromSubReddit();
   }
+  openDialog () {
+    let dialogRef = this._dialog.open(DialogContent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      //this.lastDialogResult = result;
+    });
+  }
+}
+@Component({
+  template: `
+        <p>This is a dialog</p>
+            <p>
+                  <label>
+                          This is a text box inside of a dialog.
+                                  <input #dialogInput>
+                                        </label>
+                                            </p>
+                                                <p> <button md-button (click)="dialogRef.close(dialogInput.value)">CLOSE</button> </p>
+                                                  `,
+})
+export class DialogContent {
+  constructor (@Optional() public dialogRef: MdDialogRef<DialogContent>) {}
 }

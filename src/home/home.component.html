@@ -11,7 +11,8 @@
 
 
 <div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
-  <md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
+  <!--<md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">-->
+  <md-select ngDefaultControl name='subredditSelect' placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
     <md-option class='subreddit-option' *ngFor="let sub of subRedditList"
       [selected]="sub == subReddit" [value]="sub">
      {{ sub }}
