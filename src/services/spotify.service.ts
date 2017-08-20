@@ -77,6 +77,9 @@ export class SpotifyService {
   }
 
   searchForSongs (posts: Array<string>): Observable<Array<SpotifyTrack>> {
+    if (posts.length < 1) {
+      return Observable.of([]);
+    }
     this.searchObservables = [];
     posts.forEach(
       function (post){

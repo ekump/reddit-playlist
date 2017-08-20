@@ -11,10 +11,22 @@
 
 
 <div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
-  <md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subReddit" (ngModelChange)="onChange($event)">
-    <md-option class='subreddit-option' *ngFor="let sub of subRedditList"
-      [selected]="sub == subReddit" [value]="sub">
+  <md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subreddit" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let sub of subredditList"
+      [selected]="sub == subreddit" [value]="sub">
      {{ sub }}
+    </md-option>
+  </md-select>
+  <md-select ngDefaultControl name='categorySelect' placeholder='Choose Category' class='subreddit-select post-category-select' [(ngModel)]="category" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let cat of subredditCategories"
+      [selected]="cat == category" [value]="cat">
+     {{ cat }}
+    </md-option>
+  </md-select>
+  <md-select ngDefaultControl name='countSelect' placeholder='Choose Size' class='subreddit-select post-count-select' [(ngModel)]="subredditPostCount" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let count of subredditPostCounts"
+      [selected]="count == subredditPostCount" [value]="count">
+     {{ count }}
     </md-option>
   </md-select>
 </div>
@@ -43,7 +55,7 @@
 <br>
 
 <md-card class='status-card'>
-  <md-tab-group [selectedIndex]="0">
+  <md-tab-group [selectedIndex]="1">
     <md-tab label="Summary">
       <h3>Summary Info</h3>
       <span>Nothing to see here yet</span>

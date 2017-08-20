@@ -22,13 +22,14 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
-  let subReddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
+  let subreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
   let posts: Array<string> = [
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
   let injectedSpotifyService: any;
   let injectedAuthService: any;
+  let injectedRedditService: any;
 
   let mockedAuthService = {
     isLoggedInToSpotify () {
@@ -38,11 +39,11 @@ describe('HomeComponent', () => {
   };
 
   let mockedRedditService = {
-    getPostsFromSubReddit () {
+    getPostsFromSubreddit () {
       return Observable.of(posts);
     },
     getSubReddits (): Observable<Array<string>> {
-      return Observable.of(subReddits);
+      return Observable.of(subreddits);
     },
   };
 
@@ -86,6 +87,7 @@ describe('HomeComponent', () => {
     component = fixture.componentInstance;
     injectedSpotifyService = TestBed.get(SpotifyService);
     injectedAuthService = TestBed.get(AuthService);
+    injectedRedditService = TestBed.get(RedditService);
     authServiceSpy = spyOn(
       injectedAuthService,
       'isLoggedInToSpotify'
@@ -146,6 +148,26 @@ describe('HomeComponent', () => {
         debugElement.nativeElement.getAttribute('ng-reflect-is-disabled')
       ).toBe('true');
     });
+
+    it('displays the subreddit category select', () => {
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(
+        By.css('.subreddit-select.post-category-select')
+      );
+      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+
+      expect(placeholder).toBe('Choose Category');
+    });
+
+    it('displays the subreddit post count select', () => {
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(
+        By.css('.subreddit-select.post-count-select')
+      );
+      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+
+      expect(placeholder).toBe('Choose Size');
+    });
   });
 
   describe('#ngOnInit', () => {
@@ -176,22 +198,22 @@ describe('HomeComponent', () => {
     });
   });
   describe('#onChange', () => {
-    it('calls getPostsFromSubReddit', () => {
-      spyOn(component, 'getPostsFromSubReddit').and.callThrough();
+    it('calls getPostsFromSubreddit', () => {
+      spyOn(component, 'getPostsFromSubreddit').and.callThrough();
       component.onChange();
 
-      expect(component.getPostsFromSubReddit).toHaveBeenCalled();
+      expect(component.getPostsFromSubreddit).toHaveBeenCalled();
     });
     it('clears current posts', () => {
       component.posts = [ 'post 1', 'post 2' ];
-      spyOn(component, 'getPostsFromSubReddit').and.returnValue(null);
+      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
       component.onChange();
 
       expect(component.posts).toEqual([]);
     });
     it('clears current songs', () => {
       component.songs = [ SpotifyTrackFactory.build() ];
-      spyOn(component, 'getPostsFromSubReddit').and.returnValue(null);
+      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
       component.onChange();
 
       expect(component.songs).toEqual([]);
@@ -237,24 +259,63 @@ describe('HomeComponent', () => {
   });
 
   describe('#getSubReddits', () => {
-    it('sets list of subReddits', () => {
+    it('sets list of subreddits', () => {
       component.getSubReddits();
 
-      expect(component.subRedditList).toEqual(subReddits);
+      expect(component.subredditList).toEqual(subreddits);
     });
   });
 
-  describe('#getPostsFromSubReddit', () => {
+  describe('#getPostsFromSubreddit', () => {
+    let getPostsFromSubredditSpy;
+    beforeEach(() => {
+      getPostsFromSubredditSpy = spyOn(
+        injectedRedditService,
+        'getPostsFromSubreddit'
+      ).and.callThrough();
+    });
+
     it('sets list of posts', () => {
-      component.getPostsFromSubReddit();
+      component.subreddit = '/r/hardcore';
+      component.getPostsFromSubreddit();
 
       expect(component.posts).toEqual(posts);
+    });
+
+    it('does not sets list of posts when sub not selected', () => {
+      component.getPostsFromSubreddit();
+
+      expect(component.posts).toBeUndefined();
+    });
+
+    it('sets defaults for category and count if none provided by user', () => {
+      component.subreddit = '/r/hardcore';
+      component.getPostsFromSubreddit();
+
+      expect(getPostsFromSubredditSpy).toHaveBeenCalledWith(
+        '/r/hardcore',
+        'hot',
+        20
+      );
+    });
+
+    it('sets category and count if provided', () => {
+      component.subreddit = '/r/hardcore';
+      component.subredditPostCount = 50;
+      component.category = 'rising';
+      component.getPostsFromSubreddit();
+
+      expect(getPostsFromSubredditSpy).toHaveBeenCalledWith(
+        '/r/hardcore',
+        'rising',
+        50
+      );
     });
   });
 
   describe('#createPlaylist', () => {
     it('calls spotifyService.createPlaylist with correct parameters', () => {
-      component.subReddit = 'r/BlackMetal';
+      component.subreddit = 'r/BlackMetal';
       component.songs = [ SpotifyTrackFactory.build() ];
       let createPlaylistSpy = spyOn(
         injectedSpotifyService,
@@ -262,7 +323,7 @@ describe('HomeComponent', () => {
       ).and.returnValue(Observable.of(SpotifyPlaylistFactory.build()));
       component.createPlaylist();
       expect(createPlaylistSpy).toHaveBeenCalledWith(
-        component.subReddit,
+        component.subreddit,
         component.songs
       );
     });
