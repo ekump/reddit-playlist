@@ -57,7 +57,7 @@ describe('RedditService', () => {
     });
   });
 
-  describe('getPostsFromSubReddit', () => {
+  describe('getPostsFromSubreddit', () => {
     beforeEach(() => {
       http = new Http(backend, requestOptions);
     });
@@ -78,10 +78,12 @@ describe('RedditService', () => {
       let observable = Observable.from([ resp ]);
       spyOn(http, 'get').and.returnValue(observable);
       redditService = new RedditService(http);
-      let getPostsFromSubRedditObservable = redditService.getPostsFromSubReddit(
-        '/r/blackMetal'
+      let getPostsFromSubredditObservable = redditService.getPostsFromSubreddit(
+        '/r/blackMetal',
+        'Hot',
+        20
       );
-      getPostsFromSubRedditObservable.subscribe(response => {
+      getPostsFromSubredditObservable.subscribe(response => {
         expect(response).toEqual(redditService.songs);
         done();
       });
