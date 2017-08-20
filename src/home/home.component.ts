@@ -12,8 +12,12 @@ export class HomeComponent implements OnInit {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  subRedditList: Array<string>;
-  subReddit: string;
+  subredditList: Array<string>;
+  subreddit: string;
+  category: string;
+  subredditCategories: Array<string> = [ 'Hot', 'Top', 'New', 'Rising' ];
+  subredditPostCount: number;
+  subredditPostCounts: Array<number> = [ 20, 50, 100 ];
   getSubRedditObserver: any;
   showProgressBar: boolean = false;
   posts: Array<string>;
@@ -47,19 +51,25 @@ export class HomeComponent implements OnInit {
     this.getSubRedditObserver = this.redditService
       .getSubReddits()
       .subscribe(result => {
-        this.subRedditList = result;
+        this.subredditList = result;
       });
   }
 
   getPostsFromSubReddit (): void {
-    this.showProgressBar = true;
-    this.getPostsFromSubRedditObserver = this.redditService
-      .getPostsFromSubReddit(this.subReddit)
-      .subscribe(result => {
-        this.showProgressBar = false;
-        this.posts = result;
-        this.searchSpotifyForSongs();
-      });
+    if (this.subreddit) {
+      this.showProgressBar = true;
+      this.getPostsFromSubRedditObserver = this.redditService
+        .getPostsFromSubReddit(
+          this.subreddit,
+          this.category || 'hot',
+          this.subredditPostCount || 20
+        )
+        .subscribe(result => {
+          this.showProgressBar = false;
+          this.posts = result;
+          this.searchSpotifyForSongs();
+        });
+    }
   }
   searchSpotifyForSongs (): void {
     this.showProgressBar = true;
@@ -71,7 +81,7 @@ export class HomeComponent implements OnInit {
           this.showProgressBar = false;
         },
         err => {
-          if (err.status == 401) {
+          if (err.status === 401) {
             this.openDialog();
           }
         }
@@ -81,7 +91,7 @@ export class HomeComponent implements OnInit {
   createPlaylist (): void {
     this.showProgressBar = true;
     this.spotifyService
-      .createPlaylist(this.subReddit, this.songs)
+      .createPlaylist(this.subreddit, this.songs)
       .subscribe(() => {
         this.showProgressBar = false;
       });
@@ -90,8 +100,11 @@ export class HomeComponent implements OnInit {
   onChange () {
     this.posts = [];
     this.songs = [];
+    //if(this.subreddit) {
     this.getPostsFromSubReddit();
+    //}
   }
+
   openDialog () {
     let dialogRef = this._dialog.open(DialogContent);
 

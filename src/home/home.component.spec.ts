@@ -237,10 +237,10 @@ describe('HomeComponent', () => {
   });
 
   describe('#getSubReddits', () => {
-    it('sets list of subReddits', () => {
+    it('sets list of subreddits', () => {
       component.getSubReddits();
 
-      expect(component.subRedditList).toEqual(subReddits);
+      expect(component.subredditList).toEqual(subReddits);
     });
   });
 
@@ -254,7 +254,7 @@ describe('HomeComponent', () => {
 
   describe('#createPlaylist', () => {
     it('calls spotifyService.createPlaylist with correct parameters', () => {
-      component.subReddit = 'r/BlackMetal';
+      component.subreddit = 'r/BlackMetal';
       component.songs = [ SpotifyTrackFactory.build() ];
       let createPlaylistSpy = spyOn(
         injectedSpotifyService,
@@ -262,7 +262,7 @@ describe('HomeComponent', () => {
       ).and.returnValue(Observable.of(SpotifyPlaylistFactory.build()));
       component.createPlaylist();
       expect(createPlaylistSpy).toHaveBeenCalledWith(
-        component.subReddit,
+        component.subreddit,
         component.songs
       );
     });

@@ -35,7 +35,11 @@ export class RedditService {
     }
   }
 
-  getPostsFromSubReddit (subReddit: string): Observable<any> {
+  getPostsFromSubReddit (
+    subReddit: string,
+    category: string,
+    count: number
+  ): Observable<any> {
     let headers = new Headers({
       'Cache-Control': 'no-cache',
       Pragma: 'no-cache',
@@ -45,7 +49,15 @@ export class RedditService {
     let options = new RequestOptions({ headers: headers });
 
     this.observable = this.http
-      .get('/r' + subReddit + '.json', options)
+      .get(
+        '/r' +
+          subReddit +
+          '/' +
+          category.toLowerCase() +
+          '/.json?limit=' +
+          count,
+        options
+      )
       .map(resp => {
         this.songs = this.parsePosts(resp.json());
         return this.songs;
