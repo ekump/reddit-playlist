@@ -18,7 +18,7 @@
 </div>
 
 <div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
-  <md-select ngDefaultControl name='genreSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Genre' class='subreddit-select genre-select' [(ngModel)]="genre" (ngModelChange)="onChange($event)">
+  <md-select ngDefaultControl name='genreSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Genre' class='subreddit-select genre-select' [(ngModel)]="genre" (ngModelChange)="onGenreChange($event)">
     <md-option class='subreddit-option' *ngFor="let gen of genres"
       [selected]="gen == genre" [value]="gen">
      {{ gen }}

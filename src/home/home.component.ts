@@ -12,9 +12,9 @@ export class HomeComponent implements OnInit {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  genre: string;
+  genre: string = 'Rock/Metal';
   genres: Array<string>;
-  fullSubCollection: any = {};
+  fullSubCollection: Map<string, Array<string>>;
   subredditList: Array<string>;
   subreddit: string;
   category: string;
@@ -109,10 +109,18 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  onChange () {
+  clearPostsAndSongs (): void {
     this.posts = [];
     this.songs = [];
+  }
+
+  onGenreChange () {
+    this.clearPostsAndSongs();
     this.subredditList = this.fullSubCollection[this.genre];
+  }
+
+  onChange () {
+    this.clearPostsAndSongs();
     this.getPostsFromSubreddit();
   }
 
