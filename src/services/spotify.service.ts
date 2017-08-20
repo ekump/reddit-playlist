@@ -21,7 +21,7 @@ export class SpotifyService {
 
   getMe (): Observable<SpotifyUser> {
     if (this.spotifyUser) {
-      return Observable.from([ this.spotifyUser ]);
+      return Observable.of(this.spotifyUser);
     } else if (this.meObservable) {
       return this.meObservable;
     } else {

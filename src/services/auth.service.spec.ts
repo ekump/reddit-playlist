@@ -2,12 +2,25 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 
-import { AuthService } from '../services';
+import { AuthService, WindowService } from '../services';
 
 let service: AuthService;
 let backend = new MockBackend();
 let requestOptions = new RequestOptions({});
 let http: Http;
+let windowService: WindowService;
+
+class MockWindowService {
+  mockWindow = {
+    location: {
+      href: '',
+    },
+  };
+
+  getWindow () {
+    return this.mockWindow;
+  }
+}
 
 describe('AuthService', () => {
   describe('isLoggedInToSpotify', () => {
@@ -23,7 +36,7 @@ describe('AuthService', () => {
       };
       let observable = Observable.from([ resp ]);
       spyOn(http, 'get').and.returnValue(observable);
-      service = new AuthService(http);
+      service = new AuthService(http, windowService);
 
       let authObservable = service.isLoggedInToSpotify();
 
@@ -52,7 +65,7 @@ describe('AuthService', () => {
       };
       let observable = Observable.from([ resp ]);
       spyOn(http, 'get').and.returnValue(observable);
-      service = new AuthService(http);
+      service = new AuthService(http, windowService);
 
       let authObservable = service.isLoggedInToSpotify();
 
@@ -71,6 +84,19 @@ describe('AuthService', () => {
         expect(resp).toBe(false);
         done();
       });
+    });
+  });
+  describe('redirectForSpotifyLogin', () => {
+    it('sets the window location to the auth endpoint for re-auth with spotify', () => {
+      let mockWindowService: MockWindowService = new MockWindowService();
+      spyOn(mockWindowService, 'getWindow').and.callThrough();
+      service = new AuthService(http, mockWindowService);
+      service.redirectForSpotifyLogin();
+      expect(mockWindowService.getWindow).toHaveBeenCalled();
+
+      let expectedRedirect: string = '/auth/spotify';
+
+      expect(mockWindowService.mockWindow.location.href).toBe(expectedRedirect);
     });
   });
 });
