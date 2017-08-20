@@ -313,6 +313,7 @@ describe('HomeComponent', () => {
 
     it('populates genres', () => {
       component.getSubReddits();
+
       expect(component.genres).toEqual([ 'Rock/Metal', 'Electronic music' ]);
     });
   });
@@ -373,6 +374,7 @@ describe('HomeComponent', () => {
         'createPlaylist'
       ).and.returnValue(Observable.of(SpotifyPlaylistFactory.build()));
       component.createPlaylist();
+
       expect(createPlaylistSpy).toHaveBeenCalledWith(
         component.subreddit,
         component.songs
@@ -396,6 +398,7 @@ describe('DialogContent', () => {
   it('has a constructor', () => {
     let param: any;
     let dialog = new DialogContent(param);
+
     expect(dialog).not.toBeNull();
   });
 });
