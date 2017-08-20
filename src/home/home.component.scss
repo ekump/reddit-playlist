@@ -1,3 +1,5 @@
+@import '../styles/variables.scss';
+
 .app-progress {
   margin: 20px;
 }
@@ -19,7 +21,13 @@
 }
 
 .list-item {
-  height: 20px;
+  font-size: x-small;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media screen and (min-width: $desktop) {
+    font-size: medium;
+  }
 }
 
 .list {
@@ -36,14 +44,33 @@
   margin: 0 5px 0 5px;
 }
 
+.spotify-header-section {
+  display: none;
+  @media screen and (min-width: $desktop) {
+    display: inline-flex;
+  }
+}
+
 .spotify-logged-in-status {
-  font-size: medium;
+  font-size: x-small;
+  @media screen and (min-width: $desktop) {
+    font-size: medium;
+  }
+}
+
+.spotify-header-mobile {
+  display: inline-flex;
+  @media screen and (min-width: $desktop) {
+    display: none;
+  }
 }
 
 .subreddit-options {
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .subreddit-select {
   width: 200px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
