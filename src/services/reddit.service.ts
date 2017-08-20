@@ -75,19 +75,35 @@ export class RedditService {
     return parsedResponse;
   }
 
-  parseSubReddits (redditResponse: any): Array<string> {
-    let parsedResponse: Array<string> = [];
+  parseSubReddits (redditResponse: any): any {
+    let whiteListedMegaGenres: Array<string> = [
+      'Classical music',
+      'Electronic music',
+      'Rock/Metal',
+      'Indie',
+      'Other',
+      'Hip-hop',
+      'Some decades',
+      'By country/region/culture',
+      'Any genre',
+      'Redditor-made music',
+      'Single artist/band subreddits',
+    ];
+    let parsedResponse = {};
     let currentGenre: string = '';
     for (let line of redditResponse.data.content_md.split('\n')) {
       let genreIndex = line.indexOf('##');
       if (genreIndex === 0) {
         currentGenre = line.substring(genreIndex + 2).trim();
-      } else if (currentGenre === 'Rock/Metal') {
+        if (whiteListedMegaGenres.indexOf(currentGenre) >= 0) {
+          parsedResponse[currentGenre] = new Array<string>();
+        }
+      } else if (whiteListedMegaGenres.indexOf(currentGenre) >= 0) {
         let rIndex = line.indexOf('/r/');
         let starIndex = line.indexOf('*');
         if (starIndex === 0 && rIndex > 0) {
           let parsedLine = line.substring(rIndex).split(' ')[0];
-          parsedResponse.push(parsedLine);
+          parsedResponse[currentGenre].push(parsedLine);
         }
       }
     }

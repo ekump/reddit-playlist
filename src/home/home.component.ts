@@ -12,6 +12,9 @@ export class HomeComponent implements OnInit {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
+  genre: string;
+  genres: Array<string>;
+  fullSubCollection: any = {};
   subredditList: Array<string>;
   subreddit: string;
   category: string;
@@ -58,7 +61,9 @@ export class HomeComponent implements OnInit {
     this.getSubRedditObserver = this.redditService
       .getSubReddits()
       .subscribe(result => {
-        this.subredditList = result;
+        this.subredditList = result['Rock/Metal'];
+        this.fullSubCollection = result;
+        this.genres = Object.keys(result);
       });
   }
 
@@ -107,6 +112,7 @@ export class HomeComponent implements OnInit {
   onChange () {
     this.posts = [];
     this.songs = [];
+    this.subredditList = this.fullSubCollection[this.genre];
     this.getPostsFromSubreddit();
   }
 
