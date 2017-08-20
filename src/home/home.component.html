@@ -4,11 +4,18 @@
 
 <md-progress-bar *ngIf='showProgressBar' color='accent' class="app-progress" mode="indeterminate"></md-progress-bar>
 <span class="app-toolbar-filler"></span>
-<a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
-<div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
-<img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
+<div class='spotify-header-section'>
+  <a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
+  <div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
+  <img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
+</div>
 </md-toolbar>
 
+<div class='spotify-header-mobile'>
+  <a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
+  <div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
+  <img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
+</div>
 
 <div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
   <md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subreddit" (ngModelChange)="onChange($event)">
