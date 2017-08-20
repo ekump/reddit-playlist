@@ -120,17 +120,17 @@ describe('RedditService', () => {
     let data = {
       data: {
         content_md:
-          '##Rock/Metal\n* /r/metal\n* /r/DSBM\n /r/*badasterick\nJust a genric message with a /r/flirpFlop in it\n##Electronic\n* /r/triphop',
+          '##Rock/Metal\n* /r/metal\n* /r/DSBM\n /r/*badasterick\nJust a genric message with a /r/flirpFlop in it\n##Electronic music\n* /r/triphop\n##Bad Genre\n* /r/pics\n',
       },
     };
 
-    it('correctly parses subreddits (temporarily) limited to rock/metal', () => {
+    it('correctly parses subreddits', () => {
       let actualResult = redditService.parseSubReddits(data);
-
       expect(actualResult).toBeDefined();
-      expect(actualResult.length).toBe(2);
-      expect(actualResult[0]).toEqual('/r/metal');
-      expect(actualResult[1]).toEqual('/r/DSBM');
+      expect(Object.keys(actualResult).length).toBe(2);
+      expect(actualResult['Rock/Metal'][0]).toEqual('/r/metal');
+      expect(actualResult['Rock/Metal'][1]).toEqual('/r/DSBM');
+      expect(actualResult['Electronic music'][0]).toEqual('/r/triphop');
     });
   });
 });

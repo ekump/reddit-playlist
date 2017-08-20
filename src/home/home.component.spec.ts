@@ -23,10 +23,18 @@ describe('HomeComponent', () => {
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
   let subreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
+
   let posts: Array<string> = [
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
+
+  let fullSubCollection: Map<string, Array<string>> = new Map<
+    string,
+    Array<string>
+  >();
+  fullSubCollection['Rock/Metal'] = subreddits;
+
   let injectedSpotifyService: any;
   let injectedAuthService: any;
   let injectedRedditService: any;
@@ -42,8 +50,8 @@ describe('HomeComponent', () => {
     getPostsFromSubreddit () {
       return Observable.of(posts);
     },
-    getSubReddits (): Observable<Array<string>> {
-      return Observable.of(subreddits);
+    getSubReddits (): Observable<Map<string, Array<string>>> {
+      return Observable.of(fullSubCollection);
     },
   };
 
@@ -197,6 +205,7 @@ describe('HomeComponent', () => {
       expect(component.getSubReddits).toHaveBeenCalled();
     });
   });
+
   describe('#onChange', () => {
     it('calls getPostsFromSubreddit', () => {
       spyOn(component, 'getPostsFromSubreddit').and.callThrough();
@@ -261,7 +270,8 @@ describe('HomeComponent', () => {
   describe('#getSubReddits', () => {
     it('sets list of subreddits', () => {
       component.getSubReddits();
-
+      console.log('subreddits: ', subreddits);
+      console.log('component.subredditList: ', component.subredditList);
       expect(component.subredditList).toEqual(subreddits);
     });
   });
