@@ -22,7 +22,8 @@ describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let debugElement: DebugElement;
-  let subreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
+  let rockMetalSubreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
+  let electronicMusicSubreddits: Array<string> = [ '/r/triphop' ];
 
   let posts: Array<string> = [
     'Converge - Jane Doe',
@@ -33,7 +34,8 @@ describe('HomeComponent', () => {
     string,
     Array<string>
   >();
-  fullSubCollection['Rock/Metal'] = subreddits;
+  fullSubCollection['Rock/Metal'] = rockMetalSubreddits;
+  fullSubCollection['Electronic music'] = electronicMusicSubreddits;
 
   let injectedSpotifyService: any;
   let injectedAuthService: any;
@@ -206,6 +208,42 @@ describe('HomeComponent', () => {
     });
   });
 
+  describe('#onGenreChange', () => {
+    beforeEach(() => {
+      component.fullSubCollection = fullSubCollection;
+    });
+    it('calls clearPostsAndSongs', () => {
+      spyOn(component, 'clearPostsAndSongs').and.callThrough();
+      component.onGenreChange();
+
+      expect(component.clearPostsAndSongs).toHaveBeenCalled();
+    });
+
+    it('sets subredditList to the correct genre list', () => {
+      component.genre = 'Electronic music';
+      component.onGenreChange();
+
+      expect(component.subredditList).toEqual(electronicMusicSubreddits);
+    });
+  });
+
+  describe('clearPostsAndSongs', () => {
+    it('clears current posts', () => {
+      component.posts = [ 'post 1', 'post 2' ];
+      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
+      component.clearPostsAndSongs();
+
+      expect(component.posts).toEqual([]);
+    });
+    it('clears current songs', () => {
+      component.songs = [ SpotifyTrackFactory.build() ];
+      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
+      component.clearPostsAndSongs();
+
+      expect(component.songs).toEqual([]);
+    });
+  });
+
   describe('#onChange', () => {
     it('calls getPostsFromSubreddit', () => {
       spyOn(component, 'getPostsFromSubreddit').and.callThrough();
@@ -213,19 +251,12 @@ describe('HomeComponent', () => {
 
       expect(component.getPostsFromSubreddit).toHaveBeenCalled();
     });
-    it('clears current posts', () => {
-      component.posts = [ 'post 1', 'post 2' ];
-      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
+
+    it('calls clearPostsAndSongs', () => {
+      spyOn(component, 'clearPostsAndSongs').and.callThrough();
       component.onChange();
 
-      expect(component.posts).toEqual([]);
-    });
-    it('clears current songs', () => {
-      component.songs = [ SpotifyTrackFactory.build() ];
-      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
-      component.onChange();
-
-      expect(component.songs).toEqual([]);
+      expect(component.clearPostsAndSongs).toHaveBeenCalled();
     });
   });
 
@@ -268,11 +299,21 @@ describe('HomeComponent', () => {
   });
 
   describe('#getSubReddits', () => {
-    it('sets list of subreddits', () => {
+    it('sets list of subreddits, defaulted to rock/metal', () => {
       component.getSubReddits();
-      console.log('subreddits: ', subreddits);
-      console.log('component.subredditList: ', component.subredditList);
-      expect(component.subredditList).toEqual(subreddits);
+      expect(component.subredditList).toEqual(rockMetalSubreddits);
+    });
+
+    it('sets list of subreddits, for genre', () => {
+      component.genre = 'Electronic music';
+      component.getSubReddits();
+
+      expect(component.subredditList).toEqual(electronicMusicSubreddits);
+    });
+
+    it('populates genres', () => {
+      component.getSubReddits();
+      expect(component.genres).toEqual([ 'Rock/Metal', 'Electronic music' ]);
     });
   });
 

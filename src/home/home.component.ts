@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
     this.getSubRedditObserver = this.redditService
       .getSubReddits()
       .subscribe(result => {
-        this.subredditList = result['Rock/Metal'];
+        this.subredditList = result[this.genre];
         this.fullSubCollection = result;
         this.genres = Object.keys(result);
       });
