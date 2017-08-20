@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   template: require('./home.component.html'),
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
   constructor (
     private authService: AuthService,
     private redditService: RedditService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private _dialog: MdDialog
   ) {}
 
   ngOnInit () {
@@ -63,10 +65,17 @@ export class HomeComponent implements OnInit {
     this.showProgressBar = true;
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
-      .subscribe(results => {
-        this.songs = results;
-        this.showProgressBar = false;
-      });
+      .subscribe(
+        results => {
+          this.songs = results;
+          this.showProgressBar = false;
+        },
+        err => {
+          if (err.status == 401) {
+            this.openDialog();
+          }
+        }
+      );
   }
 
   createPlaylist (): void {
@@ -83,4 +92,21 @@ export class HomeComponent implements OnInit {
     this.songs = [];
     this.getPostsFromSubReddit();
   }
+  openDialog () {
+    let dialogRef = this._dialog.open(DialogContent);
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.authService.redirectForSpotifyLogin();
+    });
+  }
+}
+
+@Component({
+  template: `
+    <p>You have been logged out of spotify. Please try again<p>
+    <p> <button md-button (click)="dialogRef.close()">CLOSE</button> </p>
+  `,
+})
+export class DialogContent {
+  constructor (@Optional() public dialogRef: MdDialogRef<DialogContent>) {}
 }

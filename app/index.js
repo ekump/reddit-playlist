@@ -39,12 +39,11 @@ passport.use(
 app.get(
   '/auth/spotify',
   passport.authenticate('spotify', {
-    scope      : [
+    scope : [
       'playlist-read-private',
       'playlist-modify-public',
       'playlist-modify-private',
     ],
-    showDialog : true,
   })
 );
 app.get(

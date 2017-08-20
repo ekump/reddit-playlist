@@ -6,7 +6,9 @@ import { Observable } from 'rxjs/Rx';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
-import { HomeComponent } from './home.component';
+import { HomeComponent, DialogContent } from './home.component';
+
+import { MdDialog } from '@angular/material';
 
 const SpotifyUserFactory = require('../../factories/spotify_user_factory')
   .SpotifyUserFactory;
@@ -32,6 +34,7 @@ describe('HomeComponent', () => {
     isLoggedInToSpotify () {
       return Observable.of(true);
     },
+    redirectForSpotifyLogin () {},
   };
 
   let mockedRedditService = {
@@ -40,6 +43,16 @@ describe('HomeComponent', () => {
     },
     getSubReddits (): Observable<Array<string>> {
       return Observable.of(subReddits);
+    },
+  };
+
+  let mockedMdDialog = {
+    open (dialogContent: DialogContent) {
+      return {
+        afterClosed: function (){
+          return Observable.of(dialogContent);
+        },
+      };
     },
   };
 
@@ -64,6 +77,7 @@ describe('HomeComponent', () => {
         { provide: AuthService, useValue: mockedAuthService },
         { provide: RedditService, useValue: mockedRedditService },
         { provide: SpotifyService, useValue: mockedSpotifyService },
+        { provide: MdDialog, useValue: mockedMdDialog },
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     });
@@ -185,25 +199,47 @@ describe('HomeComponent', () => {
   });
 
   describe('#searchSpotifyForSongs', () => {
-    it('calls the search service and sets songs', () => {
+    let searchForSongsSpy;
+    let posts;
+    beforeEach(() => {
       let returnArray: Array<SpotifyTrack> = [
         <SpotifyTrack>SpotifyTrackFactory.build(),
       ];
-      let posts: Array<string> = [ 'post 1', 'post 2' ];
+      posts = [ 'post 1', 'post 2' ];
 
-      spyOn(injectedSpotifyService, 'searchForSongs').and.returnValue(
-        Observable.from([ returnArray ])
-      );
+      searchForSongsSpy = spyOn(
+        injectedSpotifyService,
+        'searchForSongs'
+      ).and.returnValue(Observable.of(returnArray));
+      spyOn(component, 'openDialog').and.callThrough();
       component.posts = posts;
+    });
+
+    it('calls the search service and sets songs', () => {
       component.searchSpotifyForSongs();
 
       expect(injectedSpotifyService.searchForSongs).toHaveBeenCalled();
+    });
+
+    it('alerts the user to login to spotify if a 401 error is received', () => {
+      searchForSongsSpy.and.returnValue(Observable.throw({ status: 401 }));
+      component.searchSpotifyForSongs();
+
+      expect(component.openDialog).toHaveBeenCalled();
+    });
+
+    it('does not alert the user to login to spotify if other error is received', () => {
+      searchForSongsSpy.and.returnValue(Observable.throw({ status: 501 }));
+      component.searchSpotifyForSongs();
+
+      expect(component.openDialog).not.toHaveBeenCalled();
     });
   });
 
   describe('#getSubReddits', () => {
     it('sets list of subReddits', () => {
       component.getSubReddits();
+
       expect(component.subRedditList).toEqual(subReddits);
     });
   });
@@ -211,6 +247,7 @@ describe('HomeComponent', () => {
   describe('#getPostsFromSubReddit', () => {
     it('sets list of posts', () => {
       component.getPostsFromSubReddit();
+
       expect(component.posts).toEqual(posts);
     });
   });
@@ -229,5 +266,24 @@ describe('HomeComponent', () => {
         component.songs
       );
     });
+  });
+  describe('openDialog', () => {
+    it('calls authService.redirectForSpotifyLogin method', () => {
+      let authServiceSpy = spyOn(
+        injectedAuthService,
+        'redirectForSpotifyLogin'
+      ).and.callThrough();
+      component.openDialog();
+
+      expect(authServiceSpy).toHaveBeenCalled();
+    });
+  });
+});
+
+describe('DialogContent', () => {
+  it('has a constructor', () => {
+    let param: any;
+    let dialog = new DialogContent(param);
+    expect(dialog).not.toBeNull();
   });
 });
