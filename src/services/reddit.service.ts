@@ -35,7 +35,7 @@ export class RedditService {
     }
   }
 
-  getPostsFromSubReddit (
+  getPostsFromSubreddit (
     subReddit: string,
     category: string,
     count: number

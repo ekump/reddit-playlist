@@ -15,13 +15,20 @@ export class HomeComponent implements OnInit {
   subredditList: Array<string>;
   subreddit: string;
   category: string;
-  subredditCategories: Array<string> = [ 'Hot', 'Top', 'New', 'Rising' ];
+  subredditCategories: Array<string> = [
+    'Hot',
+    'New',
+    'Rising',
+    'Controversial',
+    'Top',
+    'Gilded',
+  ];
   subredditPostCount: number;
   subredditPostCounts: Array<number> = [ 20, 50, 100 ];
   getSubRedditObserver: any;
   showProgressBar: boolean = false;
   posts: Array<string>;
-  getPostsFromSubRedditObserver: any;
+  getPostsFromSubredditObserver: any;
   searchSpotifyForSongsObserver: any;
   songs: Array<SpotifyTrack> = [];
   constructor (
@@ -55,11 +62,11 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  getPostsFromSubReddit (): void {
+  getPostsFromSubreddit (): void {
     if (this.subreddit) {
       this.showProgressBar = true;
-      this.getPostsFromSubRedditObserver = this.redditService
-        .getPostsFromSubReddit(
+      this.getPostsFromSubredditObserver = this.redditService
+        .getPostsFromSubreddit(
           this.subreddit,
           this.category || 'hot',
           this.subredditPostCount || 20
@@ -100,9 +107,7 @@ export class HomeComponent implements OnInit {
   onChange () {
     this.posts = [];
     this.songs = [];
-    //if(this.subreddit) {
-    this.getPostsFromSubReddit();
-    //}
+    this.getPostsFromSubreddit();
   }
 
   openDialog () {

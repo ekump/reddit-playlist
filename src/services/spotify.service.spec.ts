@@ -163,6 +163,21 @@ describe('SpotifyService', () => {
       expect(spotifySearchSpy.calls.count()).toBe(2);
     });
 
+    it('returns an empty result set when no posts are passed in', done => {
+      let emptyPosts = [];
+      let emptyResponse;
+      let emptySearchObservable = spotifyService.searchForSongs(emptyPosts);
+      emptySearchObservable.subscribe(
+        resp => {
+          emptyResponse = resp;
+        },
+        () => {},
+        () => {
+          expect(emptyResponse.length).toBe(0);
+          done();
+        }
+      );
+    });
     it('returns the spotify track when only one track is found', () => {
       expect(response.length).toBe(1);
       expect(response[0].name).toBe('Jane Doe');
