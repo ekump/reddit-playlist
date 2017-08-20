@@ -211,6 +211,7 @@ describe('HomeComponent', () => {
         injectedSpotifyService,
         'searchForSongs'
       ).and.returnValue(Observable.of(returnArray));
+      spyOn(component, 'openDialog').and.callThrough();
       component.posts = posts;
     });
 
@@ -221,16 +222,24 @@ describe('HomeComponent', () => {
     });
 
     it('alerts the user to login to spotify if a 401 error is received', () => {
-      spyOn(component, 'openDialog').and.callThrough();
       searchForSongsSpy.and.returnValue(Observable.throw({ status: '401' }));
       component.searchSpotifyForSongs();
+
       expect(component.openDialog).toHaveBeenCalled();
+    });
+
+    it('does not alert the user to login to spotify if other error is received', () => {
+      searchForSongsSpy.and.returnValue(Observable.throw({ status: '501' }));
+      component.searchSpotifyForSongs();
+
+      expect(component.openDialog).not.toHaveBeenCalled();
     });
   });
 
   describe('#getSubReddits', () => {
     it('sets list of subReddits', () => {
       component.getSubReddits();
+
       expect(component.subRedditList).toEqual(subReddits);
     });
   });
@@ -238,6 +247,7 @@ describe('HomeComponent', () => {
   describe('#getPostsFromSubReddit', () => {
     it('sets list of posts', () => {
       component.getPostsFromSubReddit();
+
       expect(component.posts).toEqual(posts);
     });
   });
@@ -264,7 +274,15 @@ describe('HomeComponent', () => {
         'redirectForSpotifyLogin'
       ).and.callThrough();
       component.openDialog();
+
       expect(authServiceSpy).toHaveBeenCalled();
     });
+  });
+});
+
+describe('DialogContent', () => {
+  it('has a constructor', () => {
+    let _dialog = new DialogContent();
+    expect(_dialog).not.toBeNull();
   });
 });
