@@ -75,8 +75,8 @@ export class RedditService {
     return parsedResponse;
   }
 
-  parseSubReddits (redditResponse: any): any {
-    let whiteListedMegaGenres: Array<string> = [
+  parseSubReddits (redditResponse: any): Map<string, Array<string>> {
+    let genreWhiteList: Array<string> = [
       'Classical music',
       'Electronic music',
       'Rock/Metal',
@@ -89,16 +89,19 @@ export class RedditService {
       'Redditor-made music',
       'Single artist/band subreddits',
     ];
-    let parsedResponse = {};
+    let parsedResponse: Map<string, Array<string>> = new Map<
+      string,
+      Array<string>
+    >();
     let currentGenre: string = '';
     for (let line of redditResponse.data.content_md.split('\n')) {
       let genreIndex = line.indexOf('##');
       if (genreIndex === 0) {
         currentGenre = line.substring(genreIndex + 2).trim();
-        if (whiteListedMegaGenres.indexOf(currentGenre) >= 0) {
+        if (genreWhiteList.indexOf(currentGenre) >= 0) {
           parsedResponse[currentGenre] = new Array<string>();
         }
-      } else if (whiteListedMegaGenres.indexOf(currentGenre) >= 0) {
+      } else if (genreWhiteList.indexOf(currentGenre) >= 0) {
         let rIndex = line.indexOf('/r/');
         let starIndex = line.indexOf('*');
         if (starIndex === 0 && rIndex > 0) {
