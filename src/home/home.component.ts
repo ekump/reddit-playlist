@@ -1,7 +1,7 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
-import { MdDialog, MdDialogRef, MdSnackBar } from '@angular/material';
+import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
   template: require('./home.component.html'),
@@ -71,22 +71,20 @@ export class HomeComponent implements OnInit {
           this.showProgressBar = false;
         },
         err => {
-          console.log('we have err: ', err.status);
-          this.openDialog();
+          if (err.status === '401') {
+            this.openDialog();
+          }
         }
       );
   }
 
   createPlaylist (): void {
     this.showProgressBar = true;
-    this.spotifyService.createPlaylist(this.subReddit, this.songs).subscribe(
-      () => {
+    this.spotifyService
+      .createPlaylist(this.subReddit, this.songs)
+      .subscribe(() => {
         this.showProgressBar = false;
-      },
-      err => {
-        console.log('we have err: ', err.status);
-      }
-    );
+      });
   }
 
   onChange () {
@@ -97,22 +95,17 @@ export class HomeComponent implements OnInit {
   openDialog () {
     let dialogRef = this._dialog.open(DialogContent);
 
-    dialogRef.afterClosed().subscribe(result => {
-      //this.lastDialogResult = result;
+    dialogRef.afterClosed().subscribe(() => {
+      this.authService.redirectForSpotifyLogin();
     });
   }
 }
+
 @Component({
   template: `
-        <p>This is a dialog</p>
-            <p>
-                  <label>
-                          This is a text box inside of a dialog.
-                                  <input #dialogInput>
-                                        </label>
-                                            </p>
-                                                <p> <button md-button (click)="dialogRef.close(dialogInput.value)">CLOSE</button> </p>
-                                                  `,
+    <p>You have been logged out of spotify. Please try again<p>
+    <p> <button md-button (click)="dialogRef.close()">CLOSE</button> </p>
+  `,
 })
 export class DialogContent {
   constructor (@Optional() public dialogRef: MdDialogRef<DialogContent>) {}
