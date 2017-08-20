@@ -44,12 +44,6 @@
   margin: 0 5px 0 5px;
 }
 
-.spotify-logged-in-status {
-  font-size: x-small;
-  @media screen and (min-width: $desktop) {
-    font-size: medium;
-  }
-}
 .spotify-header-section {
   display: none;
   @media screen and (min-width: $desktop) {
@@ -57,7 +51,14 @@
   }
 }
 
-.spotify-mobile {
+.spotify-logged-in-status {
+  font-size: x-small;
+  @media screen and (min-width: $desktop) {
+    font-size: medium;
+  }
+}
+
+.spotify-header-mobile {
   display: inline-flex;
   @media screen and (min-width: $desktop) {
     display: none;

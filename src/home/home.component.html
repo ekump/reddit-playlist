@@ -11,7 +11,7 @@
 </div>
 </md-toolbar>
 
-<div class='spotify-mobile'>
+<div class='spotify-header-mobile'>
   <a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
   <div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
   <img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
