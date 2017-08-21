@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     'Gilded',
   ];
   subredditPostCount: number;
-  subredditPostCounts: Array<number> = [ 20, 50, 100 ];
+  subredditPostCounts: Array<number> = [ 20, 30, 40, 50 ];
   getSubRedditObserver: any;
   showProgressBar: boolean = false;
   posts: Array<string>;
