@@ -12,6 +12,9 @@ export class HomeComponent implements OnInit {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
+  genre: string = 'Rock/Metal';
+  genres: Array<string>;
+  fullSubCollection: Map<string, Array<string>>;
   subredditList: Array<string>;
   subreddit: string;
   category: string;
@@ -24,7 +27,7 @@ export class HomeComponent implements OnInit {
     'Gilded',
   ];
   subredditPostCount: number;
-  subredditPostCounts: Array<number> = [ 20, 50, 100 ];
+  subredditPostCounts: Array<number> = [ 20, 30, 40, 50 ];
   getSubRedditObserver: any;
   showProgressBar: boolean = false;
   posts: Array<string>;
@@ -58,7 +61,9 @@ export class HomeComponent implements OnInit {
     this.getSubRedditObserver = this.redditService
       .getSubReddits()
       .subscribe(result => {
-        this.subredditList = result;
+        this.subredditList = result[this.genre];
+        this.fullSubCollection = result;
+        this.genres = Object.keys(result);
       });
   }
 
@@ -104,9 +109,18 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  onChange () {
+  clearPostsAndSongs (): void {
     this.posts = [];
     this.songs = [];
+  }
+
+  onGenreChange () {
+    this.clearPostsAndSongs();
+    this.subredditList = this.fullSubCollection[this.genre];
+  }
+
+  onChange () {
+    this.clearPostsAndSongs();
     this.getPostsFromSubreddit();
   }
 
