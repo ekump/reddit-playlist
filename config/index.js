@@ -23,6 +23,10 @@ var defaultEnv = {
   },
   reddit: {
     baseURL: 'https://www.reddit.com'
+  },
+  redis: {
+    url: process.env.REDIS_URL || 'http://localhost',
+    redditCacheTTL: 3200
   }
 };
 
