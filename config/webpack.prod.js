@@ -33,7 +33,8 @@ module.exports = WEBPACK_MERGE(COMMON_CONFIG.webpackCommon, {
     new ENV_PLUGIN([
       'NODE_ENV',
       'SPOTIFY_API_CLIENT_ID',
-      'SPOTIFY_API_CLIENT_SECRET'
+      'SPOTIFY_API_CLIENT_SECRET',
+      'REDIS_URL'
     ]),
     new WEBPACK.DefinePlugin({
       AppConfig: {
