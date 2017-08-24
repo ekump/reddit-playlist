@@ -1,15 +1,7 @@
 @import '../styles/variables.scss';
 
-.app-progress {
-  margin: 20px;
-}
-
 .about-card {
   line-height: 1.4;
-}
-
-.app-toolbar-filler {
-  flex: 1 1 auto;
 }
 
 .create-playlist {
@@ -38,39 +30,4 @@
 
 .select-label {
   vertical-align: bottom;
-}
-
-.spotify-image {
-  margin: 0 5px 0 5px;
-}
-
-.spotify-header-section {
-  display: none;
-  @media screen and (min-width: $desktop) {
-    display: inline-flex;
-  }
-}
-
-.spotify-logged-in-status {
-  font-size: x-small;
-  @media screen and (min-width: $desktop) {
-    font-size: medium;
-  }
-}
-
-.spotify-header-mobile {
-  display: inline-flex;
-  @media screen and (min-width: $desktop) {
-    display: none;
-  }
-}
-
-.subreddit-options {
-  padding-top: 10px;
-}
-
-.subreddit-select {
-  width: 200px;
-  padding-bottom: 10px;
-  padding-top: 10px;
 }
