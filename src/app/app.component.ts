@@ -14,11 +14,11 @@ export class AppComponent implements AfterViewChecked {
   constructor (private cdRef: ChangeDetectorRef) {}
 
   ngAfterViewChecked () {
-    if (this.posts != this._posts) {
+    if (this.posts !== this._posts) {
       this.posts = this._posts;
     }
 
-    if (this.showProgressBar != this._showProgressBar) {
+    if (this.showProgressBar !== this._showProgressBar) {
       this.showProgressBar = this._showProgressBar;
     }
     this.cdRef.detectChanges();
