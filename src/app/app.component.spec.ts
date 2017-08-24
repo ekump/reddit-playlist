@@ -12,7 +12,6 @@ import { MdDialog } from '@angular/material';
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let homeFixture: ComponentFixture<HomeComponent>;
 
   let posts: Array<string> = [
     'Converge - Jane Doe',
@@ -67,12 +66,38 @@ describe('AppComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     });
-    homeFixture = TestBed.createComponent(HomeComponent);
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
   });
 
-  describe('#ngOnInit', () => {
-    it('should set posts', () => {});
+  describe('#onSubredditPostsChange', () => {
+    it('should set posts', () => {
+      component.onSubredditPostsChange(posts);
+
+      expect(component._posts).toBe(posts);
+    });
+  });
+
+  describe('#onProgressBarStatusChange', () => {
+    it('should set progress bar flag', () => {
+      component.onProgressBarStatusChange(true);
+
+      expect(component._showProgressBar).toBe(true);
+    });
+  });
+  describe('#ngAfterViewChecked', () => {
+    it('sets posts equal to _posts if they are different', () => {
+      component._posts = posts;
+      component.ngAfterViewChecked();
+
+      expect(component.posts).toBe(posts);
+    });
+
+    it('sets showProgressBar equal to _showProgressBar if they are different', () => {
+      component._showProgressBar = true;
+      component.ngAfterViewChecked();
+
+      expect(component.showProgressBar).toBe(true);
+    });
   });
 });
