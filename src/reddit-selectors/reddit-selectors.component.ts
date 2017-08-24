@@ -13,7 +13,6 @@ export class RedditSelectorsComponent implements OnInit {
     Array<string>
   >();
 
-  //posts: Array<string>;
   isSpotifyAuthenticated: boolean = false;
   authObserver: any;
   spotifyObserver: any;
@@ -70,18 +69,17 @@ export class RedditSelectorsComponent implements OnInit {
     }
   }
 
-  clearPostsAndSongs (): void {
+  clearPosts (): void {
     this.subredditPostChange.emit([]);
-    this.songs = [];
   }
 
   onGenreChange () {
-    this.clearPostsAndSongs();
+    this.clearPosts();
     this.subredditList = this.fullSubCollection[this.genre];
   }
 
   onChange () {
-    this.clearPostsAndSongs();
+    this.clearPosts();
     this.getPostsFromSubreddit();
   }
 }

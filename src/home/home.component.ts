@@ -65,17 +65,8 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  clearPostsAndSongs (): void {
-    this.posts = [];
+  clearSongs (): void {
     this.songs = [];
-  }
-
-  onGenreChange () {
-    this.clearPostsAndSongs();
-  }
-
-  onChange () {
-    this.clearPostsAndSongs();
   }
 
   openDialog () {

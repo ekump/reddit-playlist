@@ -1,9 +1,8 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
 import { HomeComponent, DialogContent } from './home.component';
@@ -18,10 +17,9 @@ const SpotifyTrackFactory = require('../../factories/spotify_track_factory')
 const SpotifyPlaylistFactory = require('../../factories/spotify_playlist_factory')
   .SpotifyPlaylistFactory;
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let debugElement: DebugElement;
   let rockMetalSubreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
   let electronicMusicSubreddits: Array<string> = [ '/r/triphop' ];
 
@@ -128,29 +126,12 @@ fdescribe('HomeComponent', () => {
     });
   });
 
-  //describe('clearPostsAndSongs', () => {
-  //it('clears current posts', () => {
-  //component.posts = [ 'post 1', 'post 2' ];
-  //spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
-  //component.clearPostsAndSongs();
+  describe('clearSongs', () => {
+    it('clears current songs', () => {
+      component.songs = [ SpotifyTrackFactory.build() ];
+      component.clearSongs();
 
-  //expect(component.posts).toEqual([]);
-  //});
-  //it('clears current songs', () => {
-  //component.songs = [ SpotifyTrackFactory.build() ];
-  //spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
-  //component.clearPostsAndSongs();
-
-  //expect(component.songs).toEqual([]);
-  //});
-  //});
-
-  describe('#onChange', () => {
-    it('calls clearPostsAndSongs', () => {
-      spyOn(component, 'clearPostsAndSongs').and.callThrough();
-      component.onChange();
-
-      expect(component.clearPostsAndSongs).toHaveBeenCalled();
+      expect(component.songs).toEqual([]);
     });
   });
 
