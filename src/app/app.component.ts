@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Reddit Playlist';
+  posts: Array<string>;
+
+  onSubredditPostsChange (event) {
+    this.posts = event;
+  }
 }
