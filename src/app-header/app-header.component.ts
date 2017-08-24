@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SpotifyUser } from '../models';
 import { AuthService, SpotifyService } from '../services';
 
@@ -12,7 +12,7 @@ export class AppHeaderComponent implements OnInit {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  showProgressBar: boolean = false;
+  @Input() showProgressBar: boolean = false;
   constructor (
     private authService: AuthService,
     private spotifyService: SpotifyService

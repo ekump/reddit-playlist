@@ -13,6 +13,9 @@ export class RedditSelectorsComponent implements OnInit {
     Array<string>
   >();
 
+  @Output()
+  progressBarStatusChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   isSpotifyAuthenticated: boolean = false;
   authObserver: any;
   spotifyObserver: any;
@@ -34,7 +37,6 @@ export class RedditSelectorsComponent implements OnInit {
   subredditPostCount: number;
   subredditPostCounts: Array<number> = [ 20, 30, 40, 50 ];
   getSubRedditObserver: any;
-  showProgressBar: boolean = false;
   getPostsFromSubredditObserver: any;
   songs: Array<SpotifyTrack> = [];
   constructor (private redditService: RedditService) {}
@@ -55,7 +57,7 @@ export class RedditSelectorsComponent implements OnInit {
 
   getPostsFromSubreddit (): void {
     if (this.subreddit) {
-      this.showProgressBar = true;
+      this.progressBarStatusChange.emit(true);
       this.getPostsFromSubredditObserver = this.redditService
         .getPostsFromSubreddit(
           this.subreddit,
@@ -63,7 +65,7 @@ export class RedditSelectorsComponent implements OnInit {
           this.subredditPostCount || 20
         )
         .subscribe(result => {
-          this.showProgressBar = false;
+          this.progressBarStatusChange.emit(false);
           this.subredditPostChange.emit(result);
         });
     }

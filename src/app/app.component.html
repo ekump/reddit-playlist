@@ -1,3 +1,8 @@
-<app-header></app-header>
-<reddit-selectors (subredditPostChange)='onSubredditPostsChange($event)'></reddit-selectors>
-<home [posts]='posts'></home>
+<app-header [showProgressBar]='showProgressBar'></app-header>
+<reddit-selectors
+  (subredditPostChange)='onSubredditPostsChange($event)'
+  (progressBarStatusChange)='onProgressBarStatusChange($event)'>
+</reddit-selectors>
+<home [posts]='posts'
+  (progressBarStatusChange)='onProgressBarStatusChange($event)'>
+</home>

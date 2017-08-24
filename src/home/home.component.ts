@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnChanges,
+  Optional,
+  Output,
+} from '@angular/core';
 import { AuthService, SpotifyService } from '../services';
 import { SpotifyTrack, SpotifyUser } from '../models';
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -8,12 +16,14 @@ import { MdDialog, MdDialogRef } from '@angular/material';
   template: require('./home.component.html'),
   styles: [ require('./home.component.scss') ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnChanges {
+  @Output()
+  progressBarStatusChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   isSpotifyAuthenticated: boolean = false;
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  showProgressBar: boolean = false;
   @Input() posts: Array<string>;
   @Input() subreddit: string;
   searchSpotifyForSongsObserver: any;
@@ -39,14 +49,20 @@ export class HomeComponent implements OnInit {
       });
   }
 
+  ngOnChanges () {
+    if (this.posts && this.posts.length > 0) {
+      this.searchSpotifyForSongs();
+    }
+  }
+
   searchSpotifyForSongs (): void {
-    this.showProgressBar = true;
+    this.progressBarStatusChange.emit(true);
     this.searchSpotifyForSongsObserver = this.spotifyService
       .searchForSongs(this.posts)
       .subscribe(
         results => {
           this.songs = results;
-          this.showProgressBar = false;
+          this.progressBarStatusChange.emit(false);
         },
         err => {
           if (err.status === 401) {
@@ -57,11 +73,11 @@ export class HomeComponent implements OnInit {
   }
 
   createPlaylist (): void {
-    this.showProgressBar = true;
+    //this.progressBarStatusChange.emit(true);
     this.spotifyService
       .createPlaylist(this.subreddit, this.songs)
       .subscribe(() => {
-        this.showProgressBar = false;
+        //this.progressBarStatusChange.emit(false);
       });
   }
 
