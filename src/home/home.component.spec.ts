@@ -102,9 +102,6 @@ describe('HomeComponent', () => {
     ).and.returnValue(Observable.of(true));
   });
 
-  //describe('template', () => {
-  //});
-
   describe('#ngOnInit', () => {
     it('should set spotifyUser', () => {
       component.ngOnInit();
@@ -123,6 +120,24 @@ describe('HomeComponent', () => {
       component.ngOnInit();
 
       expect(component.isSpotifyAuthenticated).toBe(false);
+    });
+  });
+
+  describe('#ngOnChanges', () => {
+    it('calls searchSpotifyForSongs when subreddit post info updates', () => {
+      component.posts = posts;
+      spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
+      component.ngOnChanges();
+
+      expect(component.searchSpotifyForSongs).toHaveBeenCalled();
+    });
+
+    it('does not call searchSpotifyForSongs when subreddit post is empty', () => {
+      component.posts = [];
+      spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
+      component.ngOnChanges();
+
+      expect(component.searchSpotifyForSongs).not.toHaveBeenCalled();
     });
   });
 

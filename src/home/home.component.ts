@@ -73,11 +73,11 @@ export class HomeComponent implements OnInit, OnChanges {
   }
 
   createPlaylist (): void {
-    //this.progressBarStatusChange.emit(true);
+    this.progressBarStatusChange.emit(true);
     this.spotifyService
       .createPlaylist(this.subreddit, this.songs)
       .subscribe(() => {
-        //this.progressBarStatusChange.emit(false);
+        this.progressBarStatusChange.emit(false);
       });
   }
 
