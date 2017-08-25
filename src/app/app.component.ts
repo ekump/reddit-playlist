@@ -1,5 +1,5 @@
 import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
-
+import { SubredditInfo } from '../models';
 @Component({
   selector: 'reddit-playlist',
   template: require('./app.component.html'),
@@ -7,15 +7,15 @@ import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 })
 export class AppComponent implements AfterViewChecked {
   title = 'Reddit Playlist';
-  posts: Array<string>;
+  subredditInfo: SubredditInfo = { posts: [], name: '' };
   showProgressBar: boolean = false;
-  _posts: Array<string>;
+  _subredditInfo: SubredditInfo = { posts: [], name: '' };
   _showProgressBar: boolean = false;
   constructor (private cdRef: ChangeDetectorRef) {}
 
   ngAfterViewChecked () {
-    if (this.posts !== this._posts) {
-      this.posts = this._posts;
+    if (this.subredditInfo.posts !== this._subredditInfo.posts) {
+      this.subredditInfo = this._subredditInfo;
     }
 
     if (this.showProgressBar !== this._showProgressBar) {
@@ -25,7 +25,7 @@ export class AppComponent implements AfterViewChecked {
   }
 
   onSubredditPostsChange (event) {
-    this._posts = event;
+    this._subredditInfo = event;
   }
 
   onProgressBarStatusChange (event) {

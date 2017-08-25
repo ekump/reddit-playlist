@@ -8,7 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { AuthService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyUser } from '../models';
+import { SpotifyTrack, SpotifyUser, SubredditInfo } from '../models';
 import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
@@ -24,8 +24,7 @@ export class HomeComponent implements OnInit, OnChanges {
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  @Input() posts: Array<string>;
-  @Input() subreddit: string;
+  @Input() subredditInfo: SubredditInfo;
   searchSpotifyForSongsObserver: any;
   songs: Array<SpotifyTrack> = [];
   constructor (
@@ -50,7 +49,7 @@ export class HomeComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges () {
-    if (this.posts && this.posts.length > 0) {
+    if (this.subredditInfo.posts && this.subredditInfo.posts.length > 0) {
       this.searchSpotifyForSongs();
     }
   }
@@ -58,7 +57,7 @@ export class HomeComponent implements OnInit, OnChanges {
   searchSpotifyForSongs (): void {
     this.progressBarStatusChange.emit(true);
     this.searchSpotifyForSongsObserver = this.spotifyService
-      .searchForSongs(this.posts)
+      .searchForSongs(this.subredditInfo.posts)
       .subscribe(
         results => {
           this.songs = results;
@@ -75,7 +74,7 @@ export class HomeComponent implements OnInit, OnChanges {
   createPlaylist (): void {
     this.progressBarStatusChange.emit(true);
     this.spotifyService
-      .createPlaylist(this.subreddit, this.songs)
+      .createPlaylist(this.subredditInfo.name, this.songs)
       .subscribe(() => {
         this.progressBarStatusChange.emit(false);
       });

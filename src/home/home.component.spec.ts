@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
+import {
+  SpotifyTrack,
+  SpotifyPlaylist,
+  SpotifyUser,
+  SubredditInfo,
+} from '../models';
 import { HomeComponent, DialogContent } from './home.component';
 
 import { MdDialog } from '@angular/material';
@@ -27,7 +32,7 @@ describe('HomeComponent', () => {
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
-
+  let subredditInfo: SubredditInfo = { name: '/r/le_test', posts: posts };
   let fullSubCollection: Map<string, Array<string>> = new Map<
     string,
     Array<string>
@@ -125,7 +130,7 @@ describe('HomeComponent', () => {
 
   describe('#ngOnChanges', () => {
     it('calls searchSpotifyForSongs when subreddit post info updates', () => {
-      component.posts = posts;
+      component.subredditInfo = subredditInfo;
       spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
       component.ngOnChanges();
 
@@ -133,7 +138,7 @@ describe('HomeComponent', () => {
     });
 
     it('does not call searchSpotifyForSongs when subreddit post is empty', () => {
-      component.posts = [];
+      component.subredditInfo = { name: '', posts: [] };
       spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
       component.ngOnChanges();
 
@@ -164,7 +169,7 @@ describe('HomeComponent', () => {
         'searchForSongs'
       ).and.returnValue(Observable.of(returnArray));
       spyOn(component, 'openDialog').and.callThrough();
-      component.posts = posts;
+      component.subredditInfo = subredditInfo;
     });
 
     it('calls the search service and sets songs', () => {
@@ -190,7 +195,7 @@ describe('HomeComponent', () => {
 
   describe('#createPlaylist', () => {
     it('calls spotifyService.createPlaylist with correct parameters', () => {
-      component.subreddit = 'r/BlackMetal';
+      component.subredditInfo = { posts: posts, name: 'r/BlackMetal' };
       component.songs = [ SpotifyTrackFactory.build() ];
       let createPlaylistSpy = spyOn(
         injectedSpotifyService,
@@ -199,7 +204,7 @@ describe('HomeComponent', () => {
       component.createPlaylist();
 
       expect(createPlaylistSpy).toHaveBeenCalledWith(
-        component.subreddit,
+        component.subredditInfo.name,
         component.songs
       );
     });

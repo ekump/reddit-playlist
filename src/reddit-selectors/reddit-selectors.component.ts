@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { RedditService } from '../services';
-import { SpotifyTrack, SpotifyUser } from '../models';
+import { SubredditInfo, SpotifyTrack, SpotifyUser } from '../models';
 
 @Component({
   selector: 'reddit-selectors',
@@ -9,8 +9,8 @@ import { SpotifyTrack, SpotifyUser } from '../models';
 })
 export class RedditSelectorsComponent implements OnInit {
   @Output()
-  subredditPostChange: EventEmitter<Array<string>> = new EventEmitter<
-    Array<string>
+  subredditPostChange: EventEmitter<SubredditInfo> = new EventEmitter<
+    SubredditInfo
   >();
 
   @Output()
@@ -65,14 +65,17 @@ export class RedditSelectorsComponent implements OnInit {
           this.subredditPostCount || 20
         )
         .subscribe(result => {
+          this.subredditPostChange.emit({
+            posts: result,
+            name: this.subreddit,
+          });
           this.progressBarStatusChange.emit(false);
-          this.subredditPostChange.emit(result);
         });
     }
   }
 
   clearPosts (): void {
-    this.subredditPostChange.emit([]);
+    this.subredditPostChange.emit({ posts: [], name: '' });
   }
 
   onGenreChange () {

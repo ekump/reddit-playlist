@@ -6,7 +6,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AppComponent } from './app.component';
 import { HomeComponent, DialogContent } from '../home/home.component';
 import { AuthService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
+import {
+  SpotifyTrack,
+  SpotifyPlaylist,
+  SpotifyUser,
+  SubredditInfo,
+} from '../models';
 import { MdDialog } from '@angular/material';
 
 describe('AppComponent', () => {
@@ -17,6 +22,8 @@ describe('AppComponent', () => {
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
+
+  let subredditInfo: SubredditInfo = { name: '/r/testName', posts: posts };
 
   const SpotifyUserFactory = require('../../factories/spotify_user_factory')
     .SpotifyUserFactory;
@@ -72,9 +79,9 @@ describe('AppComponent', () => {
 
   describe('#onSubredditPostsChange', () => {
     it('should set posts', () => {
-      component.onSubredditPostsChange(posts);
+      component.onSubredditPostsChange(subredditInfo);
 
-      expect(component._posts).toBe(posts);
+      expect(component._subredditInfo.posts).toBe(posts);
     });
   });
 
@@ -87,10 +94,25 @@ describe('AppComponent', () => {
   });
   describe('#ngAfterViewChecked', () => {
     it('sets posts equal to _posts if they are different', () => {
-      component._posts = posts;
+      component._subredditInfo = subredditInfo;
       component.ngAfterViewChecked();
 
-      expect(component.posts).toBe(posts);
+      expect(component.subredditInfo.posts).toBe(posts);
+    });
+
+    it('does not set posts equal to _posts if they are same', () => {
+      component._subredditInfo = subredditInfo;
+      component.subredditInfo = { name: 'diffName', posts: posts };
+      component.ngAfterViewChecked();
+
+      expect(component.subredditInfo.name).toBe('diffName');
+    });
+
+    it('sets posts equal to _posts if they are different', () => {
+      component._subredditInfo = subredditInfo;
+      component.ngAfterViewChecked();
+
+      expect(component.subredditInfo.posts).toBe(posts);
     });
 
     it('sets showProgressBar equal to _showProgressBar if they are different', () => {

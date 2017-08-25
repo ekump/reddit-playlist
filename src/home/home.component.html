@@ -33,9 +33,9 @@
     </md-tab>
     <md-tab label="Reddit Details">
       <h3>Reddit Post Details</h3>
-      <div *ngIf='posts'>
+      <div *ngIf='subredditInfo.posts'>
         <md-list class='list'>
-          <md-list-item class='list-item' *ngFor="let post of posts">{{post}}</md-list-item>
+          <md-list-item class='list-item' *ngFor="let post of subredditInfo.posts">{{post}}</md-list-item>
         </md-list>
       </div>
     </md-tab>

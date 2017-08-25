@@ -105,7 +105,10 @@ describe('RedditSelectorsComponent', () => {
       spyOn(component.subredditPostChange, 'emit').and.callThrough();
       component.clearPosts();
 
-      expect(component.subredditPostChange.emit).toHaveBeenCalledWith([]);
+      expect(component.subredditPostChange.emit).toHaveBeenCalledWith({
+        posts: [],
+        name: '',
+      });
     });
   });
 
@@ -156,11 +159,12 @@ describe('RedditSelectorsComponent', () => {
 
     it('sets list of posts', () => {
       spyOn(component.subredditPostChange, 'emit').and.callThrough();
-
       component.subreddit = '/r/hardcore';
       component.getPostsFromSubreddit();
-
-      expect(component.subredditPostChange.emit).toHaveBeenCalledWith(posts);
+      expect(component.subredditPostChange.emit).toHaveBeenCalledWith({
+        name: '/r/hardcore',
+        posts: posts,
+      });
     });
 
     it('does not sets list of posts when sub not selected', () => {
