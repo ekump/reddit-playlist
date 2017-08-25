@@ -29,7 +29,7 @@ module.exports = function(config) {
     coverageIstanbulReporter: {
       reports: ['text', 'html' ],
       thresholds: {
-        emitWarning: true,
+        emitWarning: false,
         global: {
           statements: 95,
           lines: 95,
@@ -39,7 +39,7 @@ module.exports = function(config) {
         each: {
           statements: 95,
           lines: 95,
-          branches: 85,
+          branches: 95,
           functions: 95
         }
       }
