@@ -1,0 +1,21 @@
+@import '../styles/variables.scss';
+
+.list {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  height: 500px;
+}
+
+.select-label {
+  vertical-align: bottom;
+}
+
+.subreddit-options {
+  padding-top: 10px;
+}
+
+.subreddit-select {
+  width: 200px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}

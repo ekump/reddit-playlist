@@ -1,48 +1,3 @@
-<md-toolbar class='header' color="primary">
-
-  <span class='app-heading'>Reddit Playlist Generator</span>
-
-<md-progress-bar *ngIf='showProgressBar' color='accent' class="app-progress" mode="indeterminate"></md-progress-bar>
-<span class="app-toolbar-filler"></span>
-<div class='spotify-header-section'>
-  <a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
-  <div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
-  <img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
-</div>
-</md-toolbar>
-
-<div class='spotify-header-mobile'>
-  <a md-button color='accent' *ngIf="!isSpotifyAuthenticated" href='/auth/spotify'>Login to Spotify</a>
-  <div *ngIf="spotifyUser" class='spotify-logged-in-status'>Welcome {{ spotifyUser.display_name }}</div>
-  <img class='spotify-image' *ngIf="spotifyUser" height='40px' width='40px' src='{{spotifyUser.images[0]?.url}}'/>
-</div>
-
-<div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
-  <md-select ngDefaultControl name='genreSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Genre' class='subreddit-select genre-select' [(ngModel)]="genre" (ngModelChange)="onGenreChange($event)">
-    <md-option class='subreddit-option' *ngFor="let gen of genres"
-      [selected]="gen == genre" [value]="gen">
-     {{ gen }}
-    </md-option>
-  </md-select>
-  <md-select ngDefaultControl name='subredditSelect' [disabled]="!isSpotifyAuthenticated" placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subreddit" (ngModelChange)="onChange($event)">
-    <md-option class='subreddit-option' *ngFor="let sub of subredditList"
-      [selected]="sub == subreddit" [value]="sub">
-     {{ sub }}
-    </md-option>
-  </md-select>
-  <md-select ngDefaultControl name='categorySelect' placeholder='Choose Category' class='subreddit-select post-category-select' [(ngModel)]="category" (ngModelChange)="onChange($event)">
-    <md-option class='subreddit-option' *ngFor="let cat of subredditCategories"
-      [selected]="cat == category" [value]="cat">
-     {{ cat }}
-    </md-option>
-  </md-select>
-  <md-select ngDefaultControl name='countSelect' placeholder='Choose Size' class='subreddit-select post-count-select' [(ngModel)]="subredditPostCount" (ngModelChange)="onChange($event)">
-    <md-option class='subreddit-option' *ngFor="let count of subredditPostCounts"
-      [selected]="count == subredditPostCount" [value]="count">
-     {{ count }}
-    </md-option>
-  </md-select>
-</div>
 
 <button md-raised-button class='create-playlist' color="primary"  *ngIf='songs.length' (click)='createPlaylist()' >Create Playlist</button>
 
@@ -78,9 +33,9 @@
     </md-tab>
     <md-tab label="Reddit Details">
       <h3>Reddit Post Details</h3>
-      <div *ngIf='posts'>
+      <div *ngIf='subredditInfo.posts'>
         <md-list class='list'>
-          <md-list-item class='list-item' *ngFor="let post of posts">{{post}}</md-list-item>
+          <md-list-item class='list-item' *ngFor="let post of subredditInfo.posts">{{post}}</md-list-item>
         </md-list>
       </div>
     </md-tab>
