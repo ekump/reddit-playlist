@@ -1,11 +1,15 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs/Rx';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { AuthService, RedditService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyPlaylist, SpotifyUser } from '../models';
+import {
+  SpotifyTrack,
+  SpotifyPlaylist,
+  SpotifyUser,
+  SubredditInfo,
+} from '../models';
 import { HomeComponent, DialogContent } from './home.component';
 
 import { MdDialog } from '@angular/material';
@@ -21,7 +25,6 @@ const SpotifyPlaylistFactory = require('../../factories/spotify_playlist_factory
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let debugElement: DebugElement;
   let rockMetalSubreddits: Array<string> = [ '/r/blackMetal', '/r/DSBM' ];
   let electronicMusicSubreddits: Array<string> = [ '/r/triphop' ];
 
@@ -29,7 +32,7 @@ describe('HomeComponent', () => {
     'Converge - Jane Doe',
     'Michael Jackson - Beat It',
   ];
-
+  let subredditInfo: SubredditInfo = { name: '/r/le_test', posts: posts };
   let fullSubCollection: Map<string, Array<string>> = new Map<
     string,
     Array<string>
@@ -104,82 +107,6 @@ describe('HomeComponent', () => {
     ).and.returnValue(Observable.of(true));
   });
 
-  describe('template', () => {
-    it('has the correct heading', () => {
-      debugElement = fixture.debugElement.query(By.css('.app-heading'));
-
-      expect(debugElement.nativeElement.textContent).toContain(
-        'Reddit Playlist Generator'
-      );
-    });
-
-    it('displays the spotify user display name when logged in', done => {
-      component.spotifyUser = SpotifyUserFactory.build();
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.spotify-logged-in-status')
-      );
-
-      expect(debugElement.nativeElement.textContent).toContain(
-        'William de Fault'
-      );
-      done();
-    });
-
-    it('displays progress indicator', () => {
-      component.showProgressBar = true;
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.app-progress'));
-
-      expect(debugElement).not.toBeNull();
-
-      component.showProgressBar = false;
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.app-progress'));
-
-      expect(debugElement).toBeNull();
-    });
-
-    it('enables the subreddit select when spotify user is logged in', () => {
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.subreddit-select'));
-
-      expect(
-        debugElement.nativeElement.getAttribute('ng-reflect-is-disabled')
-      ).toBe('false');
-    });
-
-    it('disabled the subreddit select when spotify user is logged in', () => {
-      authServiceSpy.and.returnValue(Observable.of(false));
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('.subreddit-select'));
-
-      expect(
-        debugElement.nativeElement.getAttribute('ng-reflect-is-disabled')
-      ).toBe('true');
-    });
-
-    it('displays the subreddit category select', () => {
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-category-select')
-      );
-      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
-
-      expect(placeholder).toBe('Choose Category');
-    });
-
-    it('displays the subreddit post count select', () => {
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-count-select')
-      );
-      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
-
-      expect(placeholder).toBe('Choose Size');
-    });
-  });
-
   describe('#ngOnInit', () => {
     it('should set spotifyUser', () => {
       component.ngOnInit();
@@ -199,64 +126,32 @@ describe('HomeComponent', () => {
 
       expect(component.isSpotifyAuthenticated).toBe(false);
     });
+  });
 
-    it('should call #getSubReddits', () => {
-      spyOn(component, 'getSubReddits').and.callThrough();
-      component.ngOnInit();
+  describe('#ngOnChanges', () => {
+    it('calls searchSpotifyForSongs when subreddit post info updates', () => {
+      component.subredditInfo = subredditInfo;
+      spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
+      component.ngOnChanges();
 
-      expect(component.getSubReddits).toHaveBeenCalled();
+      expect(component.searchSpotifyForSongs).toHaveBeenCalled();
+    });
+
+    it('does not call searchSpotifyForSongs when subreddit post is empty', () => {
+      component.subredditInfo = { name: '', posts: [] };
+      spyOn(component, 'searchSpotifyForSongs').and.returnValue([]);
+      component.ngOnChanges();
+
+      expect(component.searchSpotifyForSongs).not.toHaveBeenCalled();
     });
   });
 
-  describe('#onGenreChange', () => {
-    beforeEach(() => {
-      component.fullSubCollection = fullSubCollection;
-    });
-    it('calls clearPostsAndSongs', () => {
-      spyOn(component, 'clearPostsAndSongs').and.callThrough();
-      component.onGenreChange();
-
-      expect(component.clearPostsAndSongs).toHaveBeenCalled();
-    });
-
-    it('sets subredditList to the correct genre list', () => {
-      component.genre = 'Electronic music';
-      component.onGenreChange();
-
-      expect(component.subredditList).toEqual(electronicMusicSubreddits);
-    });
-  });
-
-  describe('clearPostsAndSongs', () => {
-    it('clears current posts', () => {
-      component.posts = [ 'post 1', 'post 2' ];
-      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
-      component.clearPostsAndSongs();
-
-      expect(component.posts).toEqual([]);
-    });
+  describe('clearSongs', () => {
     it('clears current songs', () => {
       component.songs = [ SpotifyTrackFactory.build() ];
-      spyOn(component, 'getPostsFromSubreddit').and.returnValue(null);
-      component.clearPostsAndSongs();
+      component.clearSongs();
 
       expect(component.songs).toEqual([]);
-    });
-  });
-
-  describe('#onChange', () => {
-    it('calls getPostsFromSubreddit', () => {
-      spyOn(component, 'getPostsFromSubreddit').and.callThrough();
-      component.onChange();
-
-      expect(component.getPostsFromSubreddit).toHaveBeenCalled();
-    });
-
-    it('calls clearPostsAndSongs', () => {
-      spyOn(component, 'clearPostsAndSongs').and.callThrough();
-      component.onChange();
-
-      expect(component.clearPostsAndSongs).toHaveBeenCalled();
     });
   });
 
@@ -274,7 +169,7 @@ describe('HomeComponent', () => {
         'searchForSongs'
       ).and.returnValue(Observable.of(returnArray));
       spyOn(component, 'openDialog').and.callThrough();
-      component.posts = posts;
+      component.subredditInfo = subredditInfo;
     });
 
     it('calls the search service and sets songs', () => {
@@ -298,76 +193,9 @@ describe('HomeComponent', () => {
     });
   });
 
-  describe('#getSubReddits', () => {
-    it('sets list of subreddits, defaulted to rock/metal', () => {
-      component.getSubReddits();
-      expect(component.subredditList).toEqual(rockMetalSubreddits);
-    });
-
-    it('sets list of subreddits, for genre', () => {
-      component.genre = 'Electronic music';
-      component.getSubReddits();
-
-      expect(component.subredditList).toEqual(electronicMusicSubreddits);
-    });
-
-    it('populates genres', () => {
-      component.getSubReddits();
-
-      expect(component.genres).toEqual([ 'Rock/Metal', 'Electronic music' ]);
-    });
-  });
-
-  describe('#getPostsFromSubreddit', () => {
-    let getPostsFromSubredditSpy;
-    beforeEach(() => {
-      getPostsFromSubredditSpy = spyOn(
-        injectedRedditService,
-        'getPostsFromSubreddit'
-      ).and.callThrough();
-    });
-
-    it('sets list of posts', () => {
-      component.subreddit = '/r/hardcore';
-      component.getPostsFromSubreddit();
-
-      expect(component.posts).toEqual(posts);
-    });
-
-    it('does not sets list of posts when sub not selected', () => {
-      component.getPostsFromSubreddit();
-
-      expect(component.posts).toBeUndefined();
-    });
-
-    it('sets defaults for category and count if none provided by user', () => {
-      component.subreddit = '/r/hardcore';
-      component.getPostsFromSubreddit();
-
-      expect(getPostsFromSubredditSpy).toHaveBeenCalledWith(
-        '/r/hardcore',
-        'hot',
-        20
-      );
-    });
-
-    it('sets category and count if provided', () => {
-      component.subreddit = '/r/hardcore';
-      component.subredditPostCount = 50;
-      component.category = 'rising';
-      component.getPostsFromSubreddit();
-
-      expect(getPostsFromSubredditSpy).toHaveBeenCalledWith(
-        '/r/hardcore',
-        'rising',
-        50
-      );
-    });
-  });
-
   describe('#createPlaylist', () => {
     it('calls spotifyService.createPlaylist with correct parameters', () => {
-      component.subreddit = 'r/BlackMetal';
+      component.subredditInfo = { posts: posts, name: 'r/BlackMetal' };
       component.songs = [ SpotifyTrackFactory.build() ];
       let createPlaylistSpy = spyOn(
         injectedSpotifyService,
@@ -376,7 +204,7 @@ describe('HomeComponent', () => {
       component.createPlaylist();
 
       expect(createPlaylistSpy).toHaveBeenCalledWith(
-        component.subreddit,
+        component.subredditInfo.name,
         component.songs
       );
     });

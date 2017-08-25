@@ -1,0 +1,26 @@
+<div  class='subreddit-options' layout='row' layout-fill layout-margin layout-align='start center'>
+  <md-select ngDefaultControl name='genreSelect' placeholder='Choose Genre' class='subreddit-select genre-select' [(ngModel)]="genre" (ngModelChange)="onGenreChange($event)">
+    <md-option class='subreddit-option' *ngFor="let gen of genres"
+      [selected]="gen == genre" [value]="gen">
+     {{ gen }}
+    </md-option>
+  </md-select>
+  <md-select ngDefaultControl name='subredditSelect' placeholder='Choose Subreddit' class='subreddit-select' [(ngModel)]="subreddit" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let sub of subredditList"
+      [selected]="sub == subreddit" [value]="sub">
+     {{ sub }}
+    </md-option>
+  </md-select>
+  <md-select ngDefaultControl name='categorySelect' placeholder='Choose Category' class='subreddit-select post-category-select' [(ngModel)]="category" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let cat of subredditCategories"
+      [selected]="cat == category" [value]="cat">
+     {{ cat }}
+    </md-option>
+  </md-select>
+  <md-select ngDefaultControl name='countSelect' placeholder='Choose Size' class='subreddit-select post-count-select' [(ngModel)]="subredditPostCount" (ngModelChange)="onChange($event)">
+    <md-option class='subreddit-option' *ngFor="let count of subredditPostCounts"
+      [selected]="count == subredditPostCount" [value]="count">
+     {{ count }}
+    </md-option>
+  </md-select>
+</div>

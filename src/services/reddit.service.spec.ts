@@ -2,7 +2,6 @@ import { Http, RequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Rx';
 import { RedditService } from '../services';
-
 let redditService: RedditService;
 let backend = new MockBackend();
 let requestOptions = new RequestOptions({});

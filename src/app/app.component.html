@@ -1,2 +1,8 @@
-
-<router-outlet></router-outlet>
+<app-header [showProgressBar]='showProgressBar'></app-header>
+<reddit-selectors
+  (subredditPostChange)='onSubredditPostsChange($event)'
+  (progressBarStatusChange)='onProgressBarStatusChange($event)'>
+</reddit-selectors>
+<home [subredditInfo]='subredditInfo'
+  (progressBarStatusChange)='onProgressBarStatusChange($event)'>
+</home>

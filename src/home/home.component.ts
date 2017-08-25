@@ -1,42 +1,34 @@
-import { Component, OnInit, Optional } from '@angular/core';
-import { AuthService, RedditService, SpotifyService } from '../services';
-import { SpotifyTrack, SpotifyUser } from '../models';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  OnChanges,
+  Optional,
+  Output,
+} from '@angular/core';
+import { AuthService, SpotifyService } from '../services';
+import { SpotifyTrack, SpotifyUser, SubredditInfo } from '../models';
 import { MdDialog, MdDialogRef } from '@angular/material';
 
 @Component({
+  selector: 'home',
   template: require('./home.component.html'),
   styles: [ require('./home.component.scss') ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnChanges {
+  @Output()
+  progressBarStatusChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   isSpotifyAuthenticated: boolean = false;
   authObserver: any;
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
-  genre: string = 'Rock/Metal';
-  genres: Array<string>;
-  fullSubCollection: Map<string, Array<string>>;
-  subredditList: Array<string>;
-  subreddit: string;
-  category: string;
-  subredditCategories: Array<string> = [
-    'Hot',
-    'New',
-    'Rising',
-    'Controversial',
-    'Top',
-    'Gilded',
-  ];
-  subredditPostCount: number;
-  subredditPostCounts: Array<number> = [ 20, 30, 40, 50 ];
-  getSubRedditObserver: any;
-  showProgressBar: boolean = false;
-  posts: Array<string>;
-  getPostsFromSubredditObserver: any;
+  @Input() subredditInfo: SubredditInfo;
   searchSpotifyForSongsObserver: any;
   songs: Array<SpotifyTrack> = [];
   constructor (
     private authService: AuthService,
-    private redditService: RedditService,
     private spotifyService: SpotifyService,
     private _dialog: MdDialog
   ) {}
@@ -54,43 +46,22 @@ export class HomeComponent implements OnInit {
             });
         }
       });
-    this.getSubReddits();
   }
 
-  getSubReddits (): void {
-    this.getSubRedditObserver = this.redditService
-      .getSubReddits()
-      .subscribe(result => {
-        this.subredditList = result[this.genre];
-        this.fullSubCollection = result;
-        this.genres = Object.keys(result);
-      });
-  }
-
-  getPostsFromSubreddit (): void {
-    if (this.subreddit) {
-      this.showProgressBar = true;
-      this.getPostsFromSubredditObserver = this.redditService
-        .getPostsFromSubreddit(
-          this.subreddit,
-          this.category || 'hot',
-          this.subredditPostCount || 20
-        )
-        .subscribe(result => {
-          this.showProgressBar = false;
-          this.posts = result;
-          this.searchSpotifyForSongs();
-        });
+  ngOnChanges () {
+    if (this.subredditInfo.posts && this.subredditInfo.posts.length > 0) {
+      this.searchSpotifyForSongs();
     }
   }
+
   searchSpotifyForSongs (): void {
-    this.showProgressBar = true;
+    this.progressBarStatusChange.emit(true);
     this.searchSpotifyForSongsObserver = this.spotifyService
-      .searchForSongs(this.posts)
+      .searchForSongs(this.subredditInfo.posts)
       .subscribe(
         results => {
           this.songs = results;
-          this.showProgressBar = false;
+          this.progressBarStatusChange.emit(false);
         },
         err => {
           if (err.status === 401) {
@@ -101,27 +72,16 @@ export class HomeComponent implements OnInit {
   }
 
   createPlaylist (): void {
-    this.showProgressBar = true;
+    this.progressBarStatusChange.emit(true);
     this.spotifyService
-      .createPlaylist(this.subreddit, this.songs)
+      .createPlaylist(this.subredditInfo.name, this.songs)
       .subscribe(() => {
-        this.showProgressBar = false;
+        this.progressBarStatusChange.emit(false);
       });
   }
 
-  clearPostsAndSongs (): void {
-    this.posts = [];
+  clearSongs (): void {
     this.songs = [];
-  }
-
-  onGenreChange () {
-    this.clearPostsAndSongs();
-    this.subredditList = this.fullSubCollection[this.genre];
-  }
-
-  onChange () {
-    this.clearPostsAndSongs();
-    this.getPostsFromSubreddit();
   }
 
   openDialog () {
