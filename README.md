@@ -1,8 +1,8 @@
 # reddit-playlist
-A web app I built in an effort to better understand Angular, TypeScript, Material, redis, coverage reporting, and devopy stuff with Heroku. As an added bonus I find the functionality quite useful.
+A web app I built in an effort to better understand Angular, TypeScript, Material, Redis, coverage reporting, and devopy stuff with Heroku. As an added bonus I find the functionality quite useful.
 
 ## What does it do?
-Pulls in posts from music related subreddits on reddit.com and attempts to find songs mentioned on Spotify and then create playlists from those songs.
+Pulls in posts from music related subreddits on [reddit.com](http://wwww.reddit.com) and attempts to find songs mentioned on [Spotify](http://www.spotify.com) and then create playlists from those songs.
 
 ## Where can I find it?
 http://reddit-playlist.herokuapp.com
