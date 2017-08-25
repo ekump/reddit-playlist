@@ -5,7 +5,7 @@ A web app I built in an effort to better understand Angular, TypeScript, Materia
 Pulls in posts from music related subreddits on [reddit.com](http://wwww.reddit.com) and attempts to find songs mentioned on [Spotify](http://www.spotify.com) and then create playlists from those songs.
 
 ## Where can I find it?
-http://reddit-playlist.herokuapp.com
+http://reddit-playlist-generator.herokuapp.com
 
 ## What improvements are on the way?
 * **Integration tests**. I've sort of been ignoring cucumber at the moment because I want to see what the newer E2E tests are all about.
