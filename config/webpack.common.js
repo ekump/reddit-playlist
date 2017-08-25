@@ -2,7 +2,6 @@
 
 const HELPERS = require('./helpers');
 const WEBPACK = require('webpack');
-const WEBCOMPONENTS = require('./webcomponents.manifest');
 
 const ASSETS_PLUGIN = require('assets-webpack-plugin');
 const HTML_WEBPACK_PLUGIN = require('html-webpack-plugin');
@@ -11,7 +10,6 @@ const TS_LINT_CONF = require('./tslint.json');
 const METADATA = {
   title: 'Reddit Playlist',
   baseUrl: '/',
-  webComponents: WEBCOMPONENTS.join('-')
 };
 
 let webpackCommon = {
