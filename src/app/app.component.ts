@@ -11,6 +11,7 @@ export class AppComponent implements AfterViewChecked {
   showProgressBar: boolean = false;
   _subredditInfo: SubredditInfo = { posts: [], name: '' };
   _showProgressBar: boolean = false;
+  isSpotifyAuthenticated: boolean = false;
   constructor (private cdRef: ChangeDetectorRef) {}
 
   ngAfterViewChecked () {

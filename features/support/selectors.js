@@ -12,9 +12,13 @@ var selectors = {
      return '/' + page;
    },
 
+  // static elements
+  'the page': 'body',
+
   // Fallthrough
   '^the (.+) section': function(className) {
-    var camelClassName = _.camelize(className.replace(' ', '-'));
+    var camelClassName = className.replace(' ', '-');
+    console.log('camelClassName: ', camelClassName);
     return '.'+ camelClassName;
   },
   '^the (.+) element': function(elementName) {
@@ -29,6 +33,9 @@ var selectors = {
   },
   '^the (.+) drop down': function(inputName) {
     return 'select[name="' + _.camelize(inputName) + '"]';
+  },
+  '^the (.+) drop down': function(className) {
+    return 'md-select.' + className.replace(/ /g , '-');
   },
   '^the radio with value "(.*)"': function(inputName) {
     return 'input[value="' + inputName + '"]';

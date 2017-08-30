@@ -13,6 +13,7 @@
     "build:prod": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/webpack --config ./config/webpack.prod.js --progress --profile --colors",
     "features": "concurrently --kill-others --success first \"NODE_ENV=test ./node_modules/.bin/protractor protractor.conf.js\"",
     "thisone": "npm run features -- --cucumberOpts.tags='@thisone'",
+    "thisone": "NODE_ENV=test ./node_modules/.bin/protractor protractor.conf.js --cucumberOpts.tags='@thisone'",
     "test": "npm run specs && npm run build:dev && npm run features",
     "heroku-postbuild": "npm run build:prod",
     "lint": "./node_modules/.bin/tslint -c config/tslint.json \"src/**/*.ts\"",

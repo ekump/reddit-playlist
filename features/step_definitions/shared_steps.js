@@ -129,4 +129,8 @@ module.exports = function () {
       next();
     });
   });
+
+  this.Then(/^(.+) should have a (.+) attribute value of "(.+)"$/, function(namedElement, attribute, value, next) {
+    var selector = selectorFor(namedElement);
+  });
 }

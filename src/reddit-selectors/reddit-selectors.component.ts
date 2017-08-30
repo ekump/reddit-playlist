@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RedditService } from '../services';
 import { SubredditInfo, SpotifyTrack, SpotifyUser } from '../models';
 
@@ -16,8 +16,8 @@ export class RedditSelectorsComponent implements OnInit {
   @Output()
   progressBarStatusChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  isSpotifyAuthenticated: boolean = false;
-  authObserver: any;
+  @Input() isSpotifyAuthenticated: boolean;
+
   spotifyObserver: any;
   spotifyUser: SpotifyUser;
   genre: string = 'Rock/Metal';
