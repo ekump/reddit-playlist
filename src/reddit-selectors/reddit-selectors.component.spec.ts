@@ -50,27 +50,27 @@ describe('RedditSelectorsComponent', () => {
     injectedRedditService = TestBed.get(RedditService);
   });
 
-  describe('template', () => {
-    it('displays the subreddit category select', () => {
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-category-select')
-      );
-      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+  //describe('template', () => {
+  //it('displays the subreddit category select', () => {
+  //fixture.detectChanges();
+  //debugElement = fixture.debugElement.query(
+  //By.css('.subreddit-select.post-category-select')
+  //);
+  //let placeholder = debugElement.nativeElement.getAttribute('placeholder');
 
-      expect(placeholder).toBe('Choose Category');
-    });
+  //expect(placeholder).toBe('Choose Category');
+  //});
 
-    it('displays the subreddit post count select', () => {
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-count-select')
-      );
-      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+  //it('displays the subreddit post count select', () => {
+  //fixture.detectChanges();
+  //debugElement = fixture.debugElement.query(
+  //By.css('.subreddit-select.post-count-select')
+  //);
+  //let placeholder = debugElement.nativeElement.getAttribute('placeholder');
 
-      expect(placeholder).toBe('Choose Size');
-    });
-  });
+  //expect(placeholder).toBe('Choose Size');
+  //});
+  //});
 
   describe('#ngOnInit', () => {
     it('should call #getSubReddits', () => {
