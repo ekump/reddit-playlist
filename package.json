@@ -11,7 +11,7 @@
   "scripts": {
     "build:dev": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/webpack --config ./config/webpack.dev.js --progress --profile --colors",
     "build:prod": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/webpack --config ./config/webpack.prod.js --progress --profile --colors",
-    "features": "concurrently --kill-others --success first \"NODE_ENV=test ./node_modules/.bin/protractor protractor.conf.js\"",
+    "features": "NODE_ENV=test ./node_modules/.bin/protractor protractor.conf.js",
     "thisone": "NODE_ENV=test ./node_modules/.bin/protractor protractor.conf.js --cucumberOpts.tags='@thisone'",
     "test": "npm run specs && npm run build:dev && npm run features",
     "heroku-postbuild": "npm run build:prod",
@@ -24,7 +24,7 @@
     "update-webdriver": "./node_modules/.bin/webdriver-manager update",
     "watch": "npm run start:dev -- --watch --hot",
     "specs": "concurrently --kill-others --success first \"karma start\"",
-    "specs:debug": "concurrently --kill-others --success first \"karma start --single-run=false\"",
+    "specs:debug": "karma start --single-run=false",
     "precommit": "lint-staged"
   },
   "dependencies": {
