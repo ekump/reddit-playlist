@@ -5,6 +5,7 @@ const Q = require('q'),
 
 exports.config = {
   seleniumServerJar: selenium.path,
+  chromeOnly: true,
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 20000,
   baseUrl: 'http://localhost:4200',
