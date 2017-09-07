@@ -8,6 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:6.11.1-browsers
+      - image: circleci/openjdk:7-browsers
       - image: redis:3.2.3
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
