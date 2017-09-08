@@ -9,7 +9,7 @@ jobs:
       # specify the version you desire here
       - image: circleci/node:6.11.1-browsers
       - image: redis:3.2.3
-      - image: selenium/standalone-chrome:3.5.3
+      - image: selenium/standalone-chrome:latest
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -36,4 +36,5 @@ jobs:
 
       # run tests!
       - run: npm run update-webdriver
-      - run: chromedriver && npm run test
+      - run: chromedriver
+      - run: npm run test
