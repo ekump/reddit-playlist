@@ -36,4 +36,4 @@ jobs:
 
       # run tests!
       - run: npm run update-webdriver
-      - run: chromeddriver && npm run test
+      - run: chromedriver && npm run test
