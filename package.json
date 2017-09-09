@@ -94,6 +94,7 @@
     "istanbul": "^0.4.5",
     "istanbul-instrumenter-loader": "^2.0.0",
     "jasmine": "^2.5.2",
+    "java": "^0.8.0",
     "karma": "^1.2.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
