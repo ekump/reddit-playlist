@@ -104,6 +104,7 @@
     "karma-webpack": "^1.8.0",
     "lint-staged": "^4.0.3",
     "localtunnel": "^1.8.1",
+    "nock": "^9.0.14",
     "passport-mocked": "0.0.5",
     "prettier-miscellaneous": "^1.5.3",
     "protractor": "^4.0.9",

@@ -15,6 +15,9 @@ var selectors = {
   // static elements
   'the page': 'body',
 
+  // api endpoints
+  'the me endpoint': '/v1/me',
+
   // Fallthrough
   '^the (.+) section': function(className) {
     var camelClassName = className.replace(' ', '-');
