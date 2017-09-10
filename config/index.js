@@ -37,6 +37,11 @@ var envs = {
   production: clone(defaultEnv)
 };
 
+envs.test.passport.strategy = 'passport-mocked';
+envs.test.passport.authorizeUrl = 'http://localhost:6666'
+envs.test.passport.accessTokenUrl = 'http://localhost:6666'
+envs.test.passport.options.clientID = 'members_only';
+envs.test.passport.options.clientSecret = 'sekret';
 
 envs.production.logger = 'tiny';
 

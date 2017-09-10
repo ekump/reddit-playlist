@@ -6,8 +6,14 @@ const config = require('../config');
 const session = require('express-session');
 const fs = require('fs');
 const passport = require('passport');
-const strategy = require('passport-spotify').Strategy;
-
+var strategy;
+if (process.env.NODE_ENV == 'test') {
+  console.log('using mock strategy');
+  strategy = require('passport-mocked').Strategy;
+} else {
+  console.log('using real strategy');
+  var strategy = require('passport-spotify').Strategy;
+}
 let app = express();
 
 app.use(passport.initialize());
@@ -49,7 +55,7 @@ app.get(
 app.get(
   '/auth/spotify/callback',
   passport.authenticate('spotify', {
-    failureRedirect : '/login',
+    failureRedirect : '/error',
     successRedirect : '/home',
   })
 );
@@ -60,8 +66,10 @@ app.get('/auth/spotify/logged-in', function (req, res, next){
     req.session.passport.user &&
     req.session.passport.user.accessToken
   ) {
+    ('**** returning true ****');
     res.send(true);
   } else {
+    ('**** returning false ****');
     res.send(false);
   }
 });

@@ -15,9 +15,6 @@ exports.config = {
   frameworkPath: require.resolve('protractor-cucumber-framework'),
   capabilities: {
     browserName: 'chrome',
-    chromeOptions: {
-      args: ['show-fps-counter=true']
-    }
   },
   cucumberOpts: {
     require: 'features/step_definitions',
