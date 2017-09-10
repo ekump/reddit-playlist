@@ -1,4 +1,3 @@
-@thisone
 Feature: As a user, I can select reddit options.
 
   Scenario: As a user, I can select reddit options.
