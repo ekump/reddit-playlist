@@ -84,6 +84,7 @@ export class RedditSelectorsComponent implements OnInit {
   }
 
   onChange () {
+    console.log('we are in on change for some reason');
     this.clearPosts();
     this.getPostsFromSubreddit();
   }
