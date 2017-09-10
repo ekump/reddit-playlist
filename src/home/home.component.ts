@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit, OnChanges {
     this.authObserver = this.authService
       .isLoggedInToSpotify()
       .subscribe(result => {
-        console.log('****RESULT: ', result);
         this.isSpotifyAuthenticated = result;
         if (this.isSpotifyAuthenticated) {
           this.spotifyObserver = this.spotifyService

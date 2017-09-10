@@ -20,7 +20,6 @@ export class SpotifyService {
   constructor (private http: Http) {}
 
   getMe (): Observable<SpotifyUser> {
-    console.log('In getME');
     if (this.spotifyUser) {
       return Observable.of(this.spotifyUser);
     } else if (this.meObservable) {
