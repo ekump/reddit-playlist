@@ -136,9 +136,11 @@ module.exports = function () {
         browser.executeScript("return arguments[0].attributes", item.getWebElement())
           .then(function (attrs) {
             attrs.forEach(function(attr) {
-              if((attr.name === 'ng-reflect-value') && (attr.value === text)) {
-                item.click().then(next);
-                }
+              if((attr.name === 'ng-reflect-value') && (attr.value.indexOf(text)) > -1) {
+                item.click().then(function () {
+                  return next();
+                });
+              }
             });
         });
       });

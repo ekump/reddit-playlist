@@ -12,6 +12,9 @@ Feature: As a user, I can select reddit options.
     When I auth using the spotify strategy
     And I go to the home page
     And I choose "Hip-hop" from the genre select drop down
+    And I wait 1
+    And I choose "/r/altrap" from the subreddit select drop down
+    And I wait 1
     #And I should see the subreddit select drop down on the page
     #And I should see the post count select drop down on the page
     #And I should see the post category select drop down on the page
