@@ -1,5 +1,6 @@
 <app-header [showProgressBar]='showProgressBar'></app-header>
 <reddit-selectors
+  [isSpotifyAuthenticated]='isSpotifyAuthenticated'
   (subredditPostChange)='onSubredditPostsChange($event)'
   (progressBarStatusChange)='onProgressBarStatusChange($event)'>
 </reddit-selectors>

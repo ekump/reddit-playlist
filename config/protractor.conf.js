@@ -5,6 +5,7 @@ const Q = require('q'),
 
 exports.config = {
   seleniumServerJar: selenium.path,
+  chromeOnly: true,
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 20000,
   baseUrl: 'http://localhost:4200',
@@ -14,9 +15,6 @@ exports.config = {
   frameworkPath: require.resolve('protractor-cucumber-framework'),
   capabilities: {
     browserName: 'chrome',
-    chromeOptions: {
-      args: ['show-fps-counter=true']
-    }
   },
   cucumberOpts: {
     require: 'features/step_definitions',

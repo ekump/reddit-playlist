@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   OnChanges,
   Optional,
   Output,
@@ -16,7 +15,7 @@ import { MdDialog, MdDialogRef } from '@angular/material';
   template: require('./home.component.html'),
   styles: [ require('./home.component.scss') ],
 })
-export class HomeComponent implements OnInit, OnChanges {
+export class HomeComponent implements OnChanges {
   @Output()
   progressBarStatusChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -32,21 +31,6 @@ export class HomeComponent implements OnInit, OnChanges {
     private spotifyService: SpotifyService,
     private _dialog: MdDialog
   ) {}
-
-  ngOnInit () {
-    this.authObserver = this.authService
-      .isLoggedInToSpotify()
-      .subscribe(result => {
-        this.isSpotifyAuthenticated = result;
-        if (this.isSpotifyAuthenticated) {
-          this.spotifyObserver = this.spotifyService
-            .getMe()
-            .subscribe(result => {
-              this.spotifyUser = result;
-            });
-        }
-      });
-  }
 
   ngOnChanges () {
     if (this.subredditInfo.posts && this.subredditInfo.posts.length > 0) {

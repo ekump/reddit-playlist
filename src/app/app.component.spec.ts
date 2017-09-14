@@ -33,6 +33,10 @@ describe('AppComponent', () => {
   const SpotifyPlaylistFactory = require('../../factories/spotify_playlist_factory')
     .SpotifyPlaylistFactory;
 
+  let injectedAuthService: any;
+
+  let authServiceSpy;
+
   let mockedAuthService = {
     isLoggedInToSpotify () {
       return Observable.of(true);
@@ -75,6 +79,32 @@ describe('AppComponent', () => {
     });
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
+    injectedAuthService = TestBed.get(AuthService);
+    authServiceSpy = spyOn(
+      injectedAuthService,
+      'isLoggedInToSpotify'
+    ).and.returnValue(Observable.of(true));
+  });
+
+  describe('#ngOnInit', () => {
+    it('should set spotifyUser', () => {
+      component.ngOnInit();
+
+      expect(component.spotifyUser).toBeDefined();
+    });
+
+    it('should set isSpotifyAuthenticated to true when logged in', () => {
+      component.ngOnInit();
+
+      expect(component.isSpotifyAuthenticated).toBe(true);
+    });
+
+    it('should set isSpotifyAuthenticated to false when logged out', () => {
+      authServiceSpy.and.returnValue(Observable.of(false));
+      component.ngOnInit();
+
+      expect(component.isSpotifyAuthenticated).toBe(false);
+    });
   });
 
   describe('#onSubredditPostsChange', () => {

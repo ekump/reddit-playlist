@@ -6,7 +6,8 @@ const config = require('../config');
 const session = require('express-session');
 const fs = require('fs');
 const passport = require('passport');
-const strategy = require('passport-spotify').Strategy;
+const strategy = (process.env.NODE_ENV = require(config.passport
+  .strategy).Strategy);
 
 let app = express();
 

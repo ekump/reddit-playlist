@@ -37,6 +37,9 @@ var envs = {
   production: clone(defaultEnv)
 };
 
+envs.test.passport.strategy = 'passport-mocked';
+envs.test.passport.options.clientID = 'reddit-playlist-generator';
+envs.test.passport.options.clientSecret = 'reddit-playlist-generator-secret';
 
 envs.production.logger = 'tiny';
 

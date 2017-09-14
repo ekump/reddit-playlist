@@ -51,10 +51,24 @@ describe('RedditSelectorsComponent', () => {
   });
 
   describe('template', () => {
+    it('displays the genre select', () => {
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(By.css('.genre-select'));
+      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+
+      expect(placeholder).toBe('Choose Genre');
+    });
+    it('displays the subreddit select', () => {
+      fixture.detectChanges();
+      debugElement = fixture.debugElement.query(By.css('.subreddit-select'));
+      let placeholder = debugElement.nativeElement.getAttribute('placeholder');
+
+      expect(placeholder).toBe('Choose Subreddit');
+    });
     it('displays the subreddit category select', () => {
       fixture.detectChanges();
       debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-category-select')
+        By.css('.post-category-select')
       );
       let placeholder = debugElement.nativeElement.getAttribute('placeholder');
 
@@ -63,9 +77,7 @@ describe('RedditSelectorsComponent', () => {
 
     it('displays the subreddit post count select', () => {
       fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('.subreddit-select.post-count-select')
-      );
+      debugElement = fixture.debugElement.query(By.css('.post-count-select'));
       let placeholder = debugElement.nativeElement.getAttribute('placeholder');
 
       expect(placeholder).toBe('Choose Size');
