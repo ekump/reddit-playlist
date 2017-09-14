@@ -18,6 +18,9 @@ var selectors = {
   // api endpoints
   'the me endpoint': '/v1/me',
 
+  '^the (.+) (.+) endpoint': function(resource, subResource) {
+    return resource + '/' + subResource;
+  },
   // Fallthrough
   '^the (.+) section': function(className) {
     var camelClassName = className.replace(' ', '-');

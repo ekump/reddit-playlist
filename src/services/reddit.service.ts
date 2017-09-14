@@ -59,6 +59,7 @@ export class RedditService {
         options
       )
       .map(resp => {
+        console.log('resp.json: ', resp.json());
         this.songs = this.parsePosts(resp.json());
         return this.songs;
       });

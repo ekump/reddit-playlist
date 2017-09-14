@@ -11,6 +11,13 @@ var expect = require('chai').expect,
     path = require('path');
 
 module.exports = function () {
+  function clearNockFor(domain, httpVerb, apiPath) {
+      var interceptor = nock(domain)
+        .persist()
+        .intercept(apiPath, httpVerb)
+
+      nock.removeInterceptor(interceptor)
+  }
 
   this.Given(/^reddit returns the musicsubreddits.json file$/, function(next) {
     var fileName = path.join(process.cwd(),'features', 'support', 'fixtures', 'musicsubreddits.json');
@@ -43,15 +50,22 @@ module.exports = function () {
         + '&redirect_uri=' + config.passport.options.callbackURL);
   });
 
-  this.Given(/the (spotify) API returns the following for a (GET|POST|PATCH) request to (.+):$/, function(service, verb, namedElement, table, next) {
+  this.Given(/the (spotify|reddit) API returns the following for a (GET|POST|PATCH) request to (.+):$/, function(service, verb, namedElement, table, next) {
     var tableObject = tableHelpers.rawToObject(table.raw());
     var apiPath = selectorFor(namedElement);
-    var apiDomain = config.spotify.baseURL;
+    var apiDomain;
+    if(service === 'spotify') {
+      apiDomain = config.spotify.baseURL;
+    }
+    else if (service === 'reddit') {
+      apiDomain = config.reddit.baseURL;
+      apiPath = apiPath + '/.json?limit=20';
+    }
 
+    clearNockFor(apiDomain, verb, apiPath);
     var scope = nock(apiDomain)
       .persist()
       .intercept(apiPath, verb)
-
     scope.reply('200', tableHelpers.rawToObject(table.raw()));
     next();
   });
