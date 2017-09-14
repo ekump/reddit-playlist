@@ -24,7 +24,6 @@ var selectors = {
   // Fallthrough
   '^the (.+) section': function(className) {
     var camelClassName = className.replace(' ', '-');
-    console.log('camelClassName: ', camelClassName);
     return '.'+ camelClassName;
   },
   '^the (.+) element': function(elementName) {

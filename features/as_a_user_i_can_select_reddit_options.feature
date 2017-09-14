@@ -14,7 +14,7 @@ Feature: As a user, I can select reddit options.
       | data/children/0/data/title | Test Title |
       | data/children/0/data/media | Test Media |
     And I choose "Hip-hop" from the genre select drop down
-    And I wait 2
+    And I wait 5
     And I choose "/r/altrap" from the subreddit select drop down
-    And I wait 2
+    And I wait 5
     Then I should see "Test Title" in the page
